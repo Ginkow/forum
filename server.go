@@ -1,15 +1,26 @@
 package main
 
 import (
+    "database/sql"
     "fmt"
     "log"
     "net/http"
     "text/template"
 )
 
+var db *sql.DB
+
 func main() {
+    var err error
+    db, err = sql.Open("mysql", "user:password@/dbname")
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer db.Close()
+
     // Gestion des routes
-    http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("./"))))
+    http.HandleFunc("/register", RegisterHandler)
+    http.HandleFunc("/login", LoginHandler)
 
     // Gestion des fichiers statiques
     http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
@@ -23,11 +34,37 @@ func main() {
 func RenderTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
     t, err := template.ParseFiles(tmpl)
     if err != nil {
-        log.Fatal(err)
+        http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+        log.Println(err)
+        return
     }
 
     err = t.Execute(w, data)
     if err != nil {
-        log.Fatal(err)
+        http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+        log.Println(err)
     }
+}
+
+
+func RegisterHandler(w http.ResponseWriter, r *http.Request) {
+    if r.Method == "GET" {
+        RenderTemplate(w, "/src/register.html", nil)
+        return
+    }
+
+    // Processus d'inscription
+    // Appelez la fonction RegisterHandler de votre package forum
+    RegisterHandler(w, r)
+}
+
+func LoginHandler(w http.ResponseWriter, r *http.Request) {
+    if r.Method == "GET" {
+        RenderTemplate(w, "/src/login.html", nil)
+        return
+    }
+
+    // Processus de connexion
+    // Appelez la fonction LoginHandler de votre package forum
+    LoginHandler(w, r)
 }
