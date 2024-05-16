@@ -30,7 +30,7 @@ func main() {
 
     // Gestion des fichiers statiques
     http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
-    http.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("./public/"))))
+    http.Handle("/src/", http.StripPrefix("/src/", http.FileServer(http.Dir("./src/"))))
 
     // Démarrer le serveur
     fmt.Println("Serveur écoutant sur le port 6969...")
@@ -54,19 +54,14 @@ func RenderTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
 
 func (h Main_page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
     if r.Method == "GET" {
-        // Ici, vous pouvez charger et renvoyer le template HTML
-        http.ServeFile(w, r, "./pages/html/Main_page.html")
+        http.ServeFile(w, r, "./src/Main_page.html")
         return
     }
-
-    // Processus d'inscription
-    // Appelez la fonction RegisterHandler de votre package forum
     http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func (h Register) ServeHTTP(w http.ResponseWriter, r *http.Request) {
     if r.Method == "GET" {
-        // Ici, vous pouvez charger et renvoyer le template HTML
         http.ServeFile(w, r, "./src/register.html")
         return
     }
@@ -75,20 +70,13 @@ func (h Register) ServeHTTP(w http.ResponseWriter, r *http.Request) {
     if saveAccount == "on" {
         fmt.Fprintf(w, "Votre compte a été sauvegardé pour une connexion plus facile la prochaine fois.")
     }
-
-    // Processus d'inscription
-    // Appelez la fonction RegisterHandler de votre package forum
     http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func (h Login) ServeHTTP(w http.ResponseWriter, r *http.Request) {
     if r.Method == "GET" {
-        // Ici, vous pouvez charger et renvoyer le template HTML
         http.ServeFile(w, r, "./src/login.html")
         return
     }
-
-    // Processus d'inscription
-    // Appelez la fonction RegisterHandler de votre package forum
     http.Redirect(w, r, "/", http.StatusSeeOther)
 }
