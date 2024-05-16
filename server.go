@@ -91,4 +91,5 @@ func (h Login) ServeHTTP(w http.ResponseWriter, r *http.Request) {
     // Processus d'inscription
     // Appelez la fonction RegisterHandler de votre package forum
     http.Redirect(w, r, "/", http.StatusSeeOther)
+    
 }
