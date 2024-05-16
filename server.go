@@ -94,16 +94,3 @@ func (h Login) ServeHTTP(w http.ResponseWriter, r *http.Request) {
     http.Redirect(w, r, "/", http.StatusSeeOther)
 
 }
-
-func (h Fuck) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-    if r.Method == "GET" {
-        // Ici, vous pouvez charger et renvoyer le template HTML
-        http.ServeFile(w, r, "./src/contact.html")
-        return
-    }
-
-    // Processus d'inscription
-    // Appelez la fonction RegisterHandler de votre package forum
-    http.Redirect(w, r, "/", http.StatusSeeOther)
-    
-}
