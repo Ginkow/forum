@@ -32,10 +32,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	http.HandleFunc("/", mainPageHandler)
-	http.HandleFunc("/register", registerHandler)
-	http.HandleFunc("/login", loginHandler)
-	http.HandleFunc("/protected", protectedHandler)
+	http.Handle("/", &mainPageHandler{})
+	http.Handle("/register", &registerHandler{})
+	http.Handle("/login", &loginHandler{})
+	http.Handle("/protected", &protectedHandler{})
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
 	http.Handle("/src/", http.StripPrefix("/src/", http.FileServer(http.Dir("./src/"))))
@@ -59,7 +59,9 @@ func renderTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
 	}
 }
 
-func mainPageHandler(w http.ResponseWriter, r *http.Request) {
+type mainPageHandler struct{}
+
+func (h *mainPageHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		renderTemplate(w, "./src/Main_page.html", nil)
 		return
@@ -71,7 +73,9 @@ func mainPageHandler(w http.ResponseWriter, r *http.Request) {
 	http.NotFound(w, r)
 }
 
-func registerHandler(w http.ResponseWriter, r *http.Request) {
+type registerHandler struct{}
+
+func (h *registerHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		renderTemplate(w, "./src/register.html", nil)
 		return
@@ -101,7 +105,9 @@ func registerHandler(w http.ResponseWriter, r *http.Request) {
 	http.NotFound(w, r)
 }
 
-func loginHandler(w http.ResponseWriter, r *http.Request) {
+type loginHandler struct{}
+
+func (h *loginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		renderTemplate(w, "./src/login.html", nil)
 		return
@@ -147,7 +153,9 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	http.NotFound(w, r)
 }
 
-func protectedHandler(w http.ResponseWriter, r *http.Request) {
+type protectedHandler struct{}
+
+func (h *protectedHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// Vérifier la session
 	cookie, err := r.Cookie("session_id")
 	if err != nil {
