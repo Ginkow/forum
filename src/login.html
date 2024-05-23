@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion</title>
+    <link rel="stylesheet" href="/static/main_page.css">
 </head>
 <body>
     <h2>Connexion</h2>
     <form action="/login" method="post">
-        <label for="email">Email ou nom d'utilisateur:</label><br>
-        <input type="text" id="email" name="email"><br>
+        <label for="username">Nom d'utilisateur:</label><br>
+        <input type="text" id="username" name="username"><br>
         <label for="password">Mot de passe:</label><br>
         <input type="password" id="password" name="password"><br><br>
         <input type="submit" value="Se connecter">

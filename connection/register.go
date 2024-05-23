@@ -2,55 +2,49 @@ package forum
 
 import (
 	"database/sql"
-	// "fmt"
+	"encoding/json"
+	"fmt"
 	"net/http"
-	"time"
-
-	_ "github.com/go-sql-driver/mysql"
 )
 
-var db *sql.DB
+// Utilisateur structure pour stocker les informations d'utilisateur
+type Users struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
 
-func RegisterHandler(w http.ResponseWriter, r *http.Request) {
-	// Vérifier que la méthode est POST
-	if r.Method != "POST" {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+// RegisterHandler structure pour la page d'inscription
+type RegisterHandler struct {
+	DB *sql.DB
+}
+
+// ServeHTTP méthode pour gérer les requêtes d'inscription
+func (h *RegisterHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Méthode non autorisée", http.StatusMethodNotAllowed)
 		return
 	}
 
-	// Récupérer les données du formulaire
-	email := r.FormValue("email")
-	username := r.FormValue("username")
-	password := r.FormValue("password")
-
-	// Vérifier si l'email est déjà pris
-	var count int
-	err := db.QueryRow("SELECT COUNT(*) FROM users WHERE email = ?", email).Scan(&count)
+	var creds Users
+	err := json.NewDecoder(r.Body).Decode(&creds)
 	if err != nil {
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
-	if count > 0 {
-		http.Error(w, "Email already exists", http.StatusBadRequest)
+		http.Error(w, "Requête mal formée", http.StatusBadRequest)
 		return
 	}
 
-	// Encrypter le mot de passe (à remplacer par un algorithme sécurisé)
-	// Note : il est recommandé d'utiliser bcrypt ou un autre algorithme de hachage sécurisé
-	encryptedPassword := password // Placeholder for encryption
-
-	// Insérer l'utilisateur dans la base de données
-	_, err = db.Exec("INSERT INTO users (email, username, password) VALUES (?, ?, ?)", email, username, encryptedPassword)
+	// Insertion de l'utilisateur dans la base de données
+	stmt, err := h.DB.Prepare("INSERT INTO utilisateurs(username, password) VALUES(?, ?)")
 	if err != nil {
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		http.Error(w, "Erreur de préparation de la requête", http.StatusInternalServerError)
+		return
+	}
+	_, err = stmt.Exec(creds.Username, creds.Password)
+	fmt.Println(creds.Username, creds.Password)
+	if err != nil {
+		http.Error(w, "Erreur lors de l'insertion de l'utilisateur", http.StatusInternalServerError)
 		return
 	}
 
-	// Créer un cookie de session avec une date d'expiration
-	expiration := time.Now().Add(24 * time.Hour)
-	cookie := http.Cookie{Name: "session", Value: email, Expires: expiration}
-	http.SetCookie(w, &cookie)
-
-	// Rediriger vers une page de succès ou envoyer une réponse de succès
-	http.Redirect(w, r, "/success", http.StatusSeeOther)
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintln(w, "Utilisateur créé avec succès")
 }
