@@ -4,16 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion</title>
-    <link rel="stylesheet" href="/static/main_page.css">
+    <link rel="stylesheet" href="/static/login.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
 </head>
 <body>
-    <h2>Connexion</h2>
-    <form action="/login" method="post">
-        <label for="username">Nom d'utilisateur:</label><br>
-        <input type="text" id="username" name="username"><br>
-        <label for="password">Mot de passe:</label><br>
-        <input type="password" id="password" name="password"><br><br>
-        <input type="submit" value="Se connecter">
-    </form>
+    <div class="login-box">
+        <h2>Connexion</h2>
+        <form action="/login" method="post">
+            <label for="username">Email ou Nom d'utilisateur:</label><br>
+            <input type="text" id="username" name="username" required><br>
+            <label for="password">Mot de passe:</label><br>
+            <input type="password" id="password" name="password" required><br><br>
+            <button class="connexion" type="submit">Se connecter</button><br><br>
+            <button class="inscription" type="button" onclick="window.location.href='/register'">Pas de Compte ? Inscrivez-vous</button>
+        </form>
+    </div>
 </body>
 </html>
