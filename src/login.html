@@ -1,16 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Connexion</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum</title>
+    <link rel="stylesheet" href="/static/login.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
 </head>
 <body>
-    <h2>Connexion</h2>
-    <form action="/login" method="post">
-        <label for="email">Email ou nom d'utilisateur:</label><br>
-        <input type="text" id="email" name="email"><br>
-        <label for="password">Mot de passe:</label><br>
-        <input type="password" id="password" name="password"><br><br>
-        <input type="submit" value="Se connecter">
-    </form>
+    <div class="login-box">
+        <h2>Connexion</h2>
+        <form action="/src/register.html" method="post" target="_blank">
+            <label for="email">Email ou nom d'utilisateur:</label><br>
+            <input class="login" type="text" id="email" name="email" required><br>
+            <label for="password">Mot de passe:</label><br>
+            <input class="login" type="password" id="password" name="password" required><br><br>
+            <button class="connexion" type="submit">Se connecter</button><br><br>
+            <button class="inscription" type="button" onclick="window.location.href='/src/register.html'">Pas de Compte ? Inscrivez-vous</button>
+        </form>
+    </div>
 </body>
 </html>

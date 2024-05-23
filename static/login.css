@@ -1,0 +1,77 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background-image: url(/images/7d45832fa22a5db828180a5491df84d2511daa22_s2_n3_y1.jpg);
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.login-box {
+    background: rgba(255, 255, 255, 0.8); /* White background with 80% opacity */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(135, 39, 195, 0.1); /* Subtle border */
+    text-align: center;
+    width: 90%;
+    max-width: 400px;
+}
+
+.login-box h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+.login-box label {
+    display: block;
+    margin: 10px 0 5px;
+    color: #333;
+    font-weight: 700;
+    text-align: left;
+}
+
+.login-box input[type="text"], 
+.login-box input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.login-box input[type="text"]:focus, 
+.login-box input[type="password"]:focus {
+    border-color: #154a75;
+    outline: none;
+}
+
+.login-box button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background: #154a75;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-bottom: 10px;
+}
+
+.login-box button:hover {
+    background: #1c92d2;
+}
+
+.login-box .inscription {
+    background: #154a75;
+}
+
+.login-box .inscription:hover {
+    background: #1c92d2;
+}
