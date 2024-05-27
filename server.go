@@ -118,14 +118,15 @@ func (h *loginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Erreur lors de la lecture du formulaire", http.StatusBadRequest)
 			return
 		}
+		email := r.FormValue("email")
 		username := r.FormValue("username")
 		password := r.FormValue("password")
-		if username == "" || password == "" {
+		if email == "" || username == "" || password == "" {
 			http.Error(w, "Nom d'utilisateur ou mot de passe vide", http.StatusBadRequest)
 			return
 		}
-		var dbUsername, dbPassword string
-		err := db.QueryRow("SELECT username, password FROM utilisateurs WHERE username = ?", username).Scan(&dbUsername, &dbPassword)
+		var dbEmail, dbUsername, dbPassword string
+		err := db.QueryRow("SELECT email, username, password FROM utilisateurs WHERE email, username = ?", email, username).Scan(&dbEmail, &dbUsername, &dbPassword)
 		if err != nil {
 			if err == sql.ErrNoRows {
 				http.Error(w, "Nom d'utilisateur ou mot de passe incorrect", http.StatusUnauthorized)
@@ -175,4 +176,23 @@ func (h *protectedHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	http.NotFound(w, r)
+}
+
+type profileHandler struct{}
+
+func (h *profileHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+    // Vérifie si l'utilisateur est connecté
+    if userIsLoggedIn(r) {
+        // Affiche le profil de l'utilisateur
+        fmt.Fprintf(w, "Bienvenue sur votre profil !")
+    } else {
+        // Redirige l'utilisateur vers la page de connexion
+        http.Redirect(w, r, "/login", http.StatusFound)
+    }
+}
+
+// Fonction de vérification de la connexion de l'utilisateur (à remplacer par votre propre logique)
+func userIsLoggedIn(r *http.Request) bool {
+    _, err := r.Cookie("session_id")
+    return err == nil
 }

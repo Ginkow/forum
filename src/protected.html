@@ -10,26 +10,14 @@
 
 <header>
     <h1>EFsport</h1>
-    <h2>
-        <div class="container">
-            <button>
-                <a href="http://localhost:6969/login" method="GET">
-                Se Connecter/S'inscrire
+    <h2 id="loginOrProfile">
+        <div class="container" id="loginOrProfileContainer">
+            <button id="loginButton">
+                <a href="http://localhost:6969/login" method="GET">Se Connecter/S'inscrire</a>
             </button>
         </div>
-    </a>
     </h2>
-     
 </header>
-
-<nav>
-    <!-- <ul> 
-        <li><a href="/index.html">Accueil</a></li>
-        <li><a href="/src/propos.html">À Propos</a></li>
-        <li><a href="/src/service.html">Services</a></li>
-        <li><a href="/src/contact.html">Contact</a></li>
-    </ul> --> 
-</nav>
 
 <section>
     <p>Derniers sujets à la une</p>
@@ -49,6 +37,23 @@
 <footer>
     <p>Droit d'auteur &copy; 2024 Exemple de Société. Tous droits réservés.</p>
 </footer>
+
+<script>
+    // Vérifier si l'utilisateur est connecté (remplacez ceci par votre propre logique)
+    var userLoggedIn = false; // Par défaut, l'utilisateur n'est pas connecté. Remplacez ceci par votre propre logique de vérification.
+
+    // Sélectionner l'élément du header pour modifier son contenu
+    var loginOrProfileContainer = document.getElementById("loginOrProfileContainer");
+
+    // Si l'utilisateur est connecté, modifier le contenu du header pour afficher le lien vers le profil
+    if (userLoggedIn) {
+        var profileLink = document.createElement("a");
+        profileLink.href = "http://localhost:6969/profile";
+        profileLink.textContent = "Profil";
+        loginOrProfileContainer.innerHTML = ""; // Efface le contenu précédent
+        loginOrProfileContainer.appendChild(profileLink); // Ajoute le lien vers le profil
+    }
+</script>
 
 </body>
 </html>
