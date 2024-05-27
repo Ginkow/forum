@@ -39,6 +39,7 @@ func main() {
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
 	http.Handle("/src/", http.StripPrefix("/src/", http.FileServer(http.Dir("./src/"))))
+	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("./images/"))))
 
 	fmt.Println("Serveur écoutant sur le port 6969...")
 	log.Fatal(http.ListenAndServe("localhost:6969", nil))
