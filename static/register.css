@@ -38,10 +38,10 @@ body {
 .login-box input[type="password"] {
     width: 100%;
     padding: 10px;
-    color: white;
-    background-color: #3B3B3B;
     margin: 5px 0 15px;
     border: 1px solid #ccc;
+    background-color: #3B3B3B;
+    color: white;
     border-radius: 5px;
     box-sizing: border-box;
     transition: border-color 0.3s ease;
@@ -67,7 +67,7 @@ body {
 }
 
 .login-box button:hover {
-    background: #134B74;
+    background: #1c92d2;
 }
 
 .login-box .inscription {
@@ -75,5 +75,5 @@ body {
 }
 
 .login-box .inscription:hover {
-    background: #134B74;
+    background: #1c92d2;
 }
