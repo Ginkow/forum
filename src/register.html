@@ -3,23 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion</title>
+    <title>Inscription</title>
     <link rel="stylesheet" href="/static/register.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
 </head>
 <body>
     <div class="login-box">
         <h2>Inscription</h2>
-        <form action="/register" method="post">
+        <form id="registrationForm" action="/register" method="post" onsubmit="return validateForm()">
             <label for="email">Email</label><br>
             <input type="text" id="email" name="email" required><br>
             <label for="username">Nom D'utilisateur</label><br>
             <input type="text" id="username" name="username" required><br>
             <label for="password">Mot de passe:</label><br>
-            <input type="password" id="password" name="password" required><br><br>
+            <input type="password" id="password" name="password" required minlength="6" maxlength="12"><br><br>
             <button class="connexion" type="submit">S'inscrire</button><br><br>
-            <button class="inscription" type="button" onclick="window.location.href='/login'">Deja un compte ? Connectez vous</button>
+            <button class="inscription" type="button" onclick="window.location.href='/login'">Déjà un compte ? Connectez-vous</button>
         </form>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const error = getCookie("error");
+            if (error) {
+                alert(error);
+                document.cookie = "error=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            }
+        });
+
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        function validateForm() {
+            const email = document.getElementById('email').value;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (!email || !username || !password) {
+                alert("Veuillez renseigner tous les champs.");
+                return false;
+            }
+
+            const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailPattern.test(email)) {
+                alert("Veuillez renseigner un email valide.");
+                return false;
+            }
+
+            if (password.length < 6 || password.length > 12) {
+                alert("Le mot de passe doit contenir entre 6 et 12 caractères.");
+                return false;
+            }
+
+            return true;
+        }
+    </script>
 </body>
 </html>

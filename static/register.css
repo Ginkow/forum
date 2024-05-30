@@ -34,7 +34,7 @@ body {
     text-align: left;
 }
 
-.login-box input[type="text"], 
+.login-box input[type="text"],
 .login-box input[type="password"] {
     width: 100%;
     padding: 10px;
@@ -47,7 +47,7 @@ body {
     transition: border-color 0.3s ease;
 }
 
-.login-box input[type="text"]:focus, 
+.login-box input[type="text"]:focus,
 .login-box input[type="password"]:focus {
     border-color: #154a75;
     outline: none;

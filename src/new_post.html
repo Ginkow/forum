@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum</title>
+    <link rel="stylesheet" href="/static/main_page.css">
+</head>
+<body>
+
+<h1>Créer un Nouveau Post</h1>
+<form action="/newpost" method="post" enctype="multipart/form-data">
+    <div>
+        <label for="title">Titre:</label>
+        <input type="text" id="title" name="title" required>
+    </div>
+    <div>
+        <label for="content">Contenu:</label>
+        <textarea id="content" name="content" rows="4" required></textarea>
+    </div>
+    <div>
+        <label for="all">Images/Videos:</label>
+        <input type="file" id="all" name="all" accept="all/*">
+    </div>
+    <!-- <div>
+        <label for="video">Vidéo:</label>
+        <input type="file" id="video" name="video" accept="video/*">
+    </div> -->
+    <div>
+        <button type="submit">Publier</button>
+    </div>
+</form>
+
+</body>
+</html>

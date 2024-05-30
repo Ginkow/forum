@@ -11,44 +11,75 @@
 <header>
     <h1>EFsport</h1>
     <h2>
-        <div class="container">
+        <div class="dropdown">
+            {{if .IsLoggedIn}}
+                <img src="/images/{{.ProfilePicture}}" alt="Photo de profil" class="profile-picture" id="profile-picture">
+                <!-- Formulaire d'upload d'image (initiallement caché) -->
+                <form id="upload-form" style="display: none;" action="/uploadProfilePicture" method="post" enctype="multipart/form-data">
+                    <input type="file" name="profilePicture" id="profile-picture-input">
+                    <input type="submit" value="Upload" id="upload-button">
+                </form>
+            {{else}}
+                <button class="bloc-top">
+                    <span>Modifier</span>
+                    <br><br>
+                </button>
+                <div class="bloc-links">
+                    <ul>
+                        <li>
+                            <br><br>
+                            <a href="/src/login.html">Page de connexion</a>
+                            <br><br>
+                        </li>
+                        <li>
+                            <a href="#">Lien 2</a>
+                            <br><br>
+                        </li>
+                        <li>
+                            <a href="#">Lien 3</a>
+                        </li>
+                    </ul>
+                </div>
+            {{end}}
+        </div>
+        <div class="container_post">
             <button>
-                <a href="http://localhost:6969/login" method="GET">
-                Se Connecter/S'inscrire
+                <a href="http://localhost:6969/newpost" method="GET">+</a>
             </button>
         </div>
-    </a>
     </h2>
-     
 </header>
-
-<nav>
-    <!-- <ul> 
-        <li><a href="/index.html">Accueil</a></li>
-        <li><a href="/src/propos.html">À Propos</a></li>
-        <li><a href="/src/service.html">Services</a></li>
-        <li><a href="/src/contact.html">Contact</a></li>
-    </ul> --> 
-</nav>
 
 <section>
     <p>Derniers sujets à la une</p>
-    <button1>
-        <a>Vous trouvez pas que Atow est surcôté ?</a><br><br>
-        <a>Cannah va donc chez Kc</a><br><br>
-        <a>Je le dis haut et fort, Valo c'est nul</a><br><br>
-        <a>Memes</a><br><br>
-        <a>Pov j'ai failli devenir pro mais je suis banni à cause de toxicité</a><br><br>
-        <a>On en a marre de Oriana toute les games</a><br><br>
-        <a>Vos pronos pour le MSI ???</a><br><br>
-        <a>Gentlemates</a><br><br>
-        <a>Vous suivez encore l'esport Fortnite ?</a>
-    </button1>
+    {{range .Posts}}
+    <div class="topics">
+        <h2>{{.Title}}</h2>
+        <p>{{.Content}}</p>
+        {{if .Video}}
+        <video width="320" height="240" controls>
+            <source src="/{{.Video}}" type="video/mp4">
+            Votre navigateur ne supporte pas la balise vidéo.
+        </video>
+        {{end}}
+    </div>
+    <hr>
+    {{end}}
 </section>
 
-<footer>
-    <p>Droit d'auteur &copy; 2024 Exemple de Société. Tous droits réservés.</p>
-</footer>
+<!-- JavaScript pour gérer le clic sur la photo de profil -->
+<script>
+    document.getElementById("profile-picture").addEventListener("click", function() {
+        // Afficher le formulaire d'upload d'image
+        document.getElementById("upload-form").style.display = "block";
+    });
+
+    // JavaScript pour afficher le nom du fichier sélectionné
+    document.getElementById("profile-picture-input").addEventListener("change", function() {
+        var fileName = this.files[0].name;
+        document.getElementById("upload-button").value = "Upload " + fileName;
+    });
+</script>
 
 </body>
 </html>

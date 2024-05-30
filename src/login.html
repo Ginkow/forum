@@ -19,5 +19,21 @@
             <button class="inscription" type="button" onclick="window.location.href='/register'">Pas de Compte ? Inscrivez-vous</button>
         </form>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const error = getCookie("error");
+            if (error) {
+                alert(error);
+                document.cookie = "error=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            }
+        });
+
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+    </script>
 </body>
 </html>
