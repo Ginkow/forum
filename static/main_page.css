@@ -40,6 +40,11 @@ body {
     background-color: #f0f0f0;
 }
 
+footer {
+    position: absolute;
+    bottom: 0%;
+    width: 100%;
+}
 
 .container{
     background: #93B1A6;
@@ -69,7 +74,9 @@ body {
     background: -webkit-linear-gradient(to left, #8f94fb, #4e54c8);
     width: 100%;
     height:100%;
+    position: left;
 }
+
 
 button1 {
     color: beige;

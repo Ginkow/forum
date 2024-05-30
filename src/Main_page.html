@@ -11,7 +11,7 @@
 <header>
     <h1>EFsport</h1>
     <h2>
-        <div class="dropdown">
+        <div class="container">
             {{if .IsLoggedIn}}
                 <img src="/images/{{.ProfilePicture}}" alt="Photo de profil" class="profile-picture" id="profile-picture">
                 <!-- Formulaire d'upload d'image (initiallement caché) -->
@@ -60,7 +60,7 @@
     // JavaScript pour afficher le nom du fichier sélectionné
     document.getElementById("profile-picture-input").addEventListener("change", function() {
         var fileName = this.files[0].name;
-        document.getElementById("upload-button").value = "Upload " + fileName;
+        document.getElementById("upload-button").value = "Upload ";
     });
 </script>
 
