@@ -20,26 +20,9 @@
                     <input type="submit" value="Upload" id="upload-button">
                 </form>
             {{else}}
-                <button class="bloc-top">
-                    <span>Modifier</span>
-                    <br><br>
+                <button>
+                    <a href="http://localhost:6969/login" method="GET">Se Connecter/S'inscrire</a>
                 </button>
-                <div class="bloc-links">
-                    <ul>
-                        <li>
-                            <br><br>
-                            <a href="/src/login.html">Page de connexion</a>
-                            <br><br>
-                        </li>
-                        <li>
-                            <a href="#">Lien 2</a>
-                            <br><br>
-                        </li>
-                        <li>
-                            <a href="#">Lien 3</a>
-                        </li>
-                    </ul>
-                </div>
             {{end}}
         </div>
         <div class="container_post">
@@ -53,7 +36,7 @@
 <section>
     <p>Derniers sujets à la une</p>
     {{range .Posts}}
-    <div class="topics">
+    <div>
         <h2>{{.Title}}</h2>
         <p>{{.Content}}</p>
         {{if .Video}}
