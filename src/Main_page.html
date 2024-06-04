@@ -11,20 +11,44 @@
 <header>
     <h1>EFsport</h1>
     <h2>
-        <div class="container">
-            {{if .IsLoggedIn}}
-                <img src="/images/{{.ProfilePicture}}" alt="Photo de profil" class="profile-picture" id="profile-picture">
-                <!-- Formulaire d'upload d'image (initiallement caché) -->
+        {{if .IsLoggedIn}}
+            <div class="container">
+                <!-- <img src="/images/{{.ProfilePicture}}" alt="Photo de profil" class="profile-picture" id="profile-picture">
+                /*Formulaire d'upload d'image (initiallement caché)*/
                 <form id="upload-form" style="display: none;" action="/uploadProfilePicture" method="post" enctype="multipart/form-data">
                     <input type="file" name="profilePicture" id="profile-picture-input">
                     <input type="submit" value="Upload" id="upload-button">
+                </form> -->
+                <form id="logout-form" action="/logout" method="post">
+                    <button type="submit">Déconnexion</button>
                 </form>
-            {{else}}
-                <button>
-                    <a href="http://localhost:6969/login" method="GET">Se Connecter/S'inscrire</a>
+            </div>
+        {{else}}
+            <div class="dropdown">
+                <button class="bloc-top">
+                    <span>Modifier</span>
+                    <br><br><br><br><br><br>
+                    <span class="Spacing">______________</span>
+                    <br><br>
                 </button>
-            {{end}}
-        </div>
+                <div class="bloc-links">
+                    <ul>
+                        <li>
+                            <br><br>
+                            <a href="http://localhost:6969/login">Page de connexion</a>
+                            <br><br>
+                        </li>
+                        <li>
+                            <a href="#">Lien 2</a>
+                            <br><br>
+                        </li>
+                        <li>
+                            <a href="#">Lien 3</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        {{end}}
         <div class="container_post">
             <button>
                 <a href="http://localhost:6969/newpost" method="GET">+</a>
@@ -50,7 +74,7 @@
     {{end}}
 </section>
 
-<!-- JavaScript pour gérer le clic sur la photo de profil -->
+<!-- JavaScript pour gérer le clic sur la photo de profil-->
 <script>
     document.getElementById("profile-picture").addEventListener("click", function() {
         // Afficher le formulaire d'upload d'image
@@ -63,6 +87,5 @@
         document.getElementById("upload-button").value = "Upload ";
     });
 </script>
-
 </body>
 </html>
