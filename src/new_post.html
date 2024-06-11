@@ -4,32 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forum</title>
-    <link rel="stylesheet" href="/static/main_page.css">
+    <link rel="stylesheet" href="/static/new_Post.css">
 </head>
 <body>
-
-<h1>Créer un Nouveau Post</h1>
+<div class="Title">
+<h1>Créer un nouveau post</h1>
+</div>
+<div class="formulaire">
 <form action="/newpost" method="post" enctype="multipart/form-data">
     <div>
-        <label for="title">Titre:</label>
+        <br><label for="title">Titre:</label><br><br>
         <input type="text" id="title" name="title" required>
     </div>
     <div>
-        <label for="content">Contenu:</label>
-        <textarea id="content" name="content" rows="4"></textarea>
+        <br><br><label for="content">Contenu:</label><br><br>
+        <textarea id="content" name="content" rows="16" cols="30"></textarea>
     </div>
     <div>
-        <label for="all">Images/Videos:</label>
-        <input type="file" id="all" name="all" accept="all/*">
+        <br><label for="all">Images/Videos:</label><br><br>
+        <input class="fichier" type="file" id="all" name="all" accept="all/*">
     </div>
     <!-- <div>
         <label for="video">Vidéo:</label>
         <input type="file" id="video" name="video" accept="video/*">
     </div> -->
     <div>
-        <button type="submit">Publier</button>
+        <br><br><button type="submit">Publier</button>
     </div>
 </form>
+</div>
 
 </body>
 </html>

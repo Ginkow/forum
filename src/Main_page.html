@@ -12,6 +12,30 @@
     <h1>EFsport</h1>
     <h2>
         {{if .IsLoggedIn}}
+        <div class="dropdown">
+            <button class="bloc-top">
+                <a href="http://localhost:6969/profil">Mon profil</a>
+            </button>
+            <div class="bloc-links">
+                <ul>
+                    <li>
+                        <br><br>
+                        <a href="http://localhost:6969/newpost">Creer un post</a>
+                        <br><br>
+                    </li>
+                    <li>
+                        <a href="#">Lien 3</a>
+                        <br><br>
+                    </li>
+                    <li>
+                        <form id="logout-form" action="/logout" method="post">
+                        
+                            <button type="submit" class="logout">Déconnexion</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
             <div class="container">
                 <!-- <img src="/images/{{.ProfilePicture}}" alt="Photo de profil" class="profile-picture" id="profile-picture">
                 /*Formulaire d'upload d'image (initiallement caché)*/
@@ -19,27 +43,22 @@
                     <input type="file" name="profilePicture" id="profile-picture-input">
                     <input type="submit" value="Upload" id="upload-button">
                 </form> -->
-                <form id="logout-form" action="/logout" method="post">
-                    <button type="submit">Déconnexion</button>
-                </form>
             </div>
         {{else}}
             <div class="dropdown">
                 <button class="bloc-top">
-                    <span>Modifier</span>
-                    <br><br><br><br><br><br>
-                    <span class="Spacing">______________</span>
+                    <a href="http://localhost:6969/login">Page de connexion</a>
                     <br><br>
                 </button>
                 <div class="bloc-links">
                     <ul>
                         <li>
-                            <br><br>
-                            <a href="http://localhost:6969/login">Page de connexion</a>
+                            <br><br><br>
+                            <a href="http://localhost:6969/login">Creer un post</a>
                             <br><br>
                         </li>
                         <li>
-                            <a href="#">Lien 2</a>
+                            <a href="#">Lien 3</a>
                             <br><br>
                         </li>
                         <li>
@@ -49,25 +68,21 @@
                 </div>
             </div>
         {{end}}
-        <div class="container_post">
-            <button>
-                <a href="http://localhost:6969/newpost" method="GET">+</a>
-            </button>
-        </div>
     </h2>
 </header>
 
 <section>
     <p>Derniers sujets à la une</p>
     {{range .Posts}}
-    <div>
-        <h2>{{.Title}}</h2>
-        <p>{{.Content}}</p>
+    <div class="post">
+        <div class="TitlePost">{{.Title}}:</div>
         {{if .Video}}
-        <video width="320" height="240" controls>
+        <div class="videoPost">
+        <video width="40" height="30" controls>
             <source src="/{{.Video}}" type="video/mp4">
             Votre navigateur ne supporte pas la balise vidéo.
         </video>
+        </div>
         {{end}}
     </div>
     <hr>

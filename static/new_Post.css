@@ -1,0 +1,35 @@
+body {
+    background-image: url(/images/pixelcut-export.jpeg);
+    background-size: cover;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.Title {
+    position: relative;
+    text-align: center;
+    color: violet;
+}
+
+.formulaire {
+    text-align: center;
+    position: relative;
+}
+
+label {
+    font-size: 30px;;
+}
+
+textarea {
+    border-radius: 0.2em;
+}
+
+button {
+    background-color: rgb(103, 75, 224);
+    color:white;
+    border-color: rgb(103, 75, 224);
+    border-radius: 0.5em;
+    font-size: 15px;
+    padding: 10px 30px;
+    position: absolute;
+    left: 46.5%;
+}
