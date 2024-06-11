@@ -29,6 +29,7 @@ type Post struct {
 	Title   string
 	Content string
 	Video   string
+	Image	[]string
 	UserID  int
 }
 
@@ -84,50 +85,74 @@ func renderTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
 type mainPageHandler struct{}
 
 func (h *mainPageHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodGet {
-		var data MainPageData
-		sessionCookie, err := r.Cookie("session_id")
-		if err == nil {
-			email, ok := sessions[sessionCookie.Value]
-			if ok {
-				data.IsLoggedIn = true
-				// Récupérer l'image de profil de l'utilisateur
-				var profilePicture string
-				err := db.QueryRow("SELECT profile_picture FROM utilisateurs WHERE email = ?", email).Scan(&profilePicture)
-				if err == nil {
-					data.ProfilePicture = profilePicture
-				}
-			}
-		}
+    if r.Method == http.MethodGet {
+        var data MainPageData
+        sessionCookie, err := r.Cookie("session_id")
+        if err == nil {
+            email, ok := sessions[sessionCookie.Value]
+            if ok {
+                data.IsLoggedIn = true
+                // Retrieve the profile picture of the user
+                var profilePicture string
+                err := db.QueryRow("SELECT profile_picture FROM utilisateurs WHERE email = ?", email).Scan(&profilePicture)
+                if err == nil {
+                    data.ProfilePicture = profilePicture
+                }
+            }
+        }
 
-		// Récupérer les posts
-		rows, err := db.Query("SELECT title, content, video FROM posts")
-		if err != nil {
-			http.Error(w, "Erreur lors de la récupération des posts", http.StatusInternalServerError)
-			log.Println("Erreur lors de la récupération des posts:", err)
-			return
-		}
-		defer rows.Close()
+        // Retrieve posts
+        rows, err := db.Query("SELECT id, title, content, video FROM posts")
+        if err != nil {
+            http.Error(w, "Erreur lors de la récupération des posts", http.StatusInternalServerError)
+            log.Println("Erreur lors de la récupération des posts:", err)
+            return
+        }
+        defer rows.Close()
 
-		for rows.Next() {
-			var post Post
-			err := rows.Scan(&post.Title, &post.Content, &post.Video)
-			if err != nil {
-				http.Error(w, "Erreur lors de la lecture des posts", http.StatusInternalServerError)
-				log.Println("Erreur lors de la lecture des posts:", err)
-				return
-			}
-			data.Posts = append(data.Posts, post)
-		}
+        for rows.Next() {
+            var post Post
+            var videoPtr sql.NullString
+            err := rows.Scan(&post.ID, &post.Title, &post.Content, &videoPtr)
+            if err != nil {
+                http.Error(w, "Erreur lors de la lecture des posts", http.StatusInternalServerError)
+                log.Println("Erreur lors de la lecture des posts:", err)
+                return
+            }
+            if videoPtr.Valid {
+                post.Video = videoPtr.String
+            }
 
-		renderTemplate(w, "./src/Main_page.html", data)
-		return
-	}
-	if r.Method == http.MethodPost {
-		http.Redirect(w, r, "/register", http.StatusSeeOther)
-		return
-	}
-	http.NotFound(w, r)
+            // Retrieve associated images
+            imageRows, err := db.Query("SELECT image FROM posts WHERE post_id = ?", post.ID)
+            if err != nil {
+                http.Error(w, "Erreur lors de la récupération des images", http.StatusInternalServerError)
+                log.Println("Erreur lors de la récupération des images:", err)
+                return
+            }
+            defer imageRows.Close()
+
+            for imageRows.Next() {
+                var imagePath string
+                if err := imageRows.Scan(&imagePath); err != nil {
+                    http.Error(w, "Erreur lors de la lecture des images", http.StatusInternalServerError)
+                    log.Println("Erreur lors de la lecture des images:", err)
+                    return
+                }
+                post.Image = append(post.Image, imagePath)
+            }
+
+            data.Posts = append(data.Posts, post)
+        }
+
+        renderTemplate(w, "./src/Main_page.html", data)
+        return
+    }
+    if r.Method == http.MethodPost {
+        http.Redirect(w, r, "/register", http.StatusSeeOther)
+        return
+    }
+    http.NotFound(w, r)
 }
 
 type registerHandler struct{}
@@ -328,26 +353,63 @@ func (h *newPostHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		title := r.FormValue("title")
 		content := r.FormValue("content")
 		var videoPath string
+		var imagePaths []string
 
 		// Handle video and image upload
-		files, header, err := r.FormFile("all")
-		if err == nil {
-			defer files.Close()
-			videoPath = filepath.Join("./img_video", header.Filename)
-			out, err := os.Create(videoPath)
+		formdata := r.MultipartForm
+		files := formdata.File["all"]
+
+		for _, fileHeader := range files {
+			file, err := fileHeader.Open()
 			if err != nil {
-				http.Error(w, "Erreur lors de la sauvegarde de la vidéo", http.StatusInternalServerError)
+				http.Error(w, "Erreur lors de l'ouverture du fichier", http.StatusInternalServerError)
 				return
 			}
-			defer out.Close()
-			_, err = files.Seek(0, 0)
-			if err != nil {
-				http.Error(w, "Erreur lors de la lecture du fichier", http.StatusInternalServerError)
-				return
-			}
-			_, err = out.ReadFrom(files)
-			if err != nil {
-				http.Error(w, "Erreur lors de la lecture du fichier", http.StatusInternalServerError)
+			defer file.Close()
+
+			fileExt := filepath.Ext(fileHeader.Filename)
+			switch fileExt {
+			case ".mp4", ".avi", ".mov":
+				// Handle video file
+				videoPath = filepath.Join("./img_video", fileHeader.Filename)
+				out, err := os.Create(videoPath)
+				if err != nil {
+					http.Error(w, "Erreur lors de la sauvegarde de la vidéo", http.StatusInternalServerError)
+					return
+				}
+				defer out.Close()
+				_, err = file.Seek(0, 0)
+				if err != nil {
+					http.Error(w, "Erreur lors de la lecture du fichier", http.StatusInternalServerError)
+					return
+				}
+				_, err = out.ReadFrom(file)
+				if err != nil {
+					http.Error(w, "Erreur lors de la lecture du fichier", http.StatusInternalServerError)
+					return
+				}
+			case ".jpg", ".jpeg", ".png", ".gif":
+				// Handle image file
+				imagePath := filepath.Join("./img_video", fileHeader.Filename)
+				imagePaths = append(imagePaths, imagePath)
+				out, err := os.Create(imagePath)
+				if err != nil {
+					http.Error(w, "Erreur lors de la sauvegarde de l'image", http.StatusInternalServerError)
+					return
+				}
+				defer out.Close()
+				_, err = file.Seek(0, 0)
+				if err != nil {
+					http.Error(w, "Erreur lors de la lecture du fichier", http.StatusInternalServerError)
+					return
+				}
+				_, err = out.ReadFrom(file)
+				if err != nil {
+					http.Error(w, "Erreur lors de la lecture du fichier", http.StatusInternalServerError)
+					return
+				}
+			default:
+				http.Error(w, "Format de fichier non supporté", http.StatusBadRequest)
 				return
 			}
 		}
@@ -363,6 +425,17 @@ func (h *newPostHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		// Get the ID of the inserted post
 		postID, _ := result.LastInsertId()
 
+		// Insert images into the database
+		for _, imagePath := range imagePaths {
+			_, err := db.Exec("INSERT INTO posts (title, content, image, post_id) VALUES (?, ?, ?, ?)", title, content, imagePath, postID)
+			if err != nil {
+				http.Error(w, "Erreur lors de la création du post", http.StatusInternalServerError)
+				log.Println("Erreur lors de l'insertion de l'image dans la base de données:", err)
+				return
+			}
+		}
+
+
 		// Redirect to the main page with the ID of the new post
 		http.Redirect(w, r, fmt.Sprintf("/?postID=%d", postID), http.StatusSeeOther)
 		return
@@ -374,7 +447,7 @@ type postsHandler struct{}
 
 func (h *postsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
-		rows, err := db.Query("SELECT title, content, video FROM posts")
+		rows, err := db.Query("SELECT title, content, video, image FROM posts")
 		if err != nil {
 			http.Error(w, "Erreur lors de la récupération des posts", http.StatusInternalServerError)
 			log.Println("Erreur lors de la récupération des posts:", err)
@@ -384,7 +457,7 @@ func (h *postsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		var posts []Post
 		for rows.Next() {
 			var post Post
-			err := rows.Scan(&post.Title, &post.Content, &post.Video)
+			err := rows.Scan(&post.Title, &post.Content, &post.Video, &post.Image)
 			if err != nil {
 				http.Error(w, "Erreur lors de la lecture des posts", http.StatusInternalServerError)
 				log.Println("Erreur lors de la lecture des posts:", err)

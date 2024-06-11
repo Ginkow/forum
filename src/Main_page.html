@@ -78,12 +78,15 @@
         <div class="TitlePost">{{.Title}}:</div>
         {{if .Video}}
         <div class="videoPost">
-        <video width="40" height="30" controls>
+        <video width="320" height="240" controls>
             <source src="/{{.Video}}" type="video/mp4">
             Votre navigateur ne supporte pas la balise vidéo.
         </video>
-        </div>
         {{end}}
+        {{range .Image}}
+        <img src="/{{.}}" alt="Image" width="320">
+        {{end}}
+        </div>
     </div>
     <hr>
     {{end}}
