@@ -2,24 +2,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Posts</title>
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
-
-<h1>Posts</h1>
-{{range .}}
-<div class="post">
-    <h3>{{.Title}}</h3>
-    <p>{{.Content}}</p>
-    {{if .Video}}
-    <video controls>
-        <source src="{{.Video}}" type="video/mp4">
-        Votre navigateur ne supporte pas la balise vidéo.
-    </video>
-    {{end}}
-</div>
-{{end}}
-
+    <h1>Posts</h1>
+    <div id="posts">
+        {{range .}}
+        <div class="post">
+            <a href="/details/{{.ID}}">
+                <h2>{{.Title}}</h2>
+                <p>{{.Content}}</p>
+                {{if .Video}}
+                <video width="320" height="240" controls>
+                    <source src="/{{.Video}}" type="video/mp4">
+                    Votre navigateur ne supporte pas la balise vidéo.
+                </video>
+                {{end}}
+                {{if .Image}}
+                <div class="images">
+                    {{range .Image}}
+                    <img src="/{{.}}" alt="Post image" width="320">
+                    {{end}}
+                </div>
+                {{end}}
+                <p>Posted by {{.Username}}</p>
+                <br>
+                    <span class="Spacing">_______________________________________________________________________________________________________________________________________________________________________________</span>
+                <br>
+            </a>
+        </div>
+        {{end}}
+    </div>
 </body>
 </html>

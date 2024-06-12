@@ -24,7 +24,7 @@
                         <br><br>
                     </li>
                     <li>
-                        <a href="#">Lien 3</a>
+                        <a href="/posts">Post</a>
                         <br><br>
                     </li>
                     <li>
@@ -58,7 +58,7 @@
                             <br><br>
                         </li>
                         <li>
-                            <a href="#">Lien 3</a>
+                            <a href="/posts">Post</a>
                             <br><br>
                         </li>
                         <li>
@@ -76,6 +76,7 @@
     {{range .Posts}}
     <div class="post">
         <div class="TitlePost">{{.Title}}:</div>
+        <div class="UsernamePost">Posté par : {{.Username}}</div>   
         {{if .Video}}
         <div class="videoPost">
         <video width="320" height="240" controls>

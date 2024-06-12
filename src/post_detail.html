@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{.Title}}</title>
+</head>
+<body>
+    <h1>{{.Title}}</h1>
+    <p>{{.Content}}</p>
+    {{if .Video}}
+    <video width="320" height="240" controls>
+        <source src="/{{.Video}}" type="video/mp4">
+        Votre navigateur ne supporte pas la balise vidéo.
+    </video>
+    {{end}}
+    {{range .Image}}
+    <img src="/{{.}}" alt="Post image" width="320">
+    {{end}}
+    <p>Posted by: {{.Username}}</p>
+    <a href="/">Back to Home</a>
+</body>
+</html>
