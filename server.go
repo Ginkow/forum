@@ -438,20 +438,18 @@ func (h *newPostHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 		// Insert images into the database
 		for _, imagePath := range imagePaths {
-			_, err := db.Exec("INSERT INTO posts (title, content, image, post_id) VALUES (?, ?, ?, ?)", title, content, imagePath, postID)
+			_, err = db.Exec("INSERT INTO posts (post_id, image) VALUES (?, ?)", postID, imagePath)
 			if err != nil {
-				http.Error(w, "Erreur lors de la création du post", http.StatusInternalServerError)
-				log.Println("Erreur lors de l'insertion de l'image dans la base de données:", err)
+				http.Error(w, "Erreur lors de l'insertion des images", http.StatusInternalServerError)
+				log.Println("Erreur lors de l'insertion des images:", err)
 				return
 			}
 		}
 
-		// Redirect to the main page with the ID of the new post
-		http.Redirect(w, r, fmt.Sprintf("/?postID=%d", postID), http.StatusSeeOther)
-		return
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
-	http.NotFound(w, r)
 }
+
 
 type postsHandler struct{}
 
@@ -539,8 +537,13 @@ func (h *postDetailHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			log.Println("Erreur lors de l'ajout du commentaire:", err)
 			return
 		}
+
+		// Redirect to the same post detail page after successfully adding a comment
+		http.Redirect(w, r, fmt.Sprintf("/details/%s", postID), http.StatusSeeOther)
+		return
 	}
 
+	// Fetch post details and comments for GET request
 	var post Post
 	var videoPtr sql.NullString
 	err := db.QueryRow("SELECT p.id, p.title, p.content, p.video, u.username FROM posts p JOIN utilisateurs u ON p.user_id = u.id WHERE p.id = ?", postID).Scan(&post.ID, &post.Title, &post.Content, &videoPtr, &post.Username)
