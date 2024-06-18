@@ -1,7 +1,6 @@
 body {
     font-family: 'Roboto', sans-serif;
-    background-image: url(../images/pixelcut-export.jpeg);
-    background-size: cover;
+    background: linear-gradient(to right,rgb(66, 137, 192),60%, purple);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -10,7 +9,7 @@ body {
 }
 
 .login-box {
-    background: #080C0D; /* White background with 80% opacity */
+    background: #0f1c32; /* White background with 80% opacity */
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -58,7 +57,7 @@ body {
     padding: 10px;
     border: none;
     border-radius: 5px;
-    background: #154a75;
+    background: rgb(252, 10, 10);
     color: white;
     font-size: 16px;
     cursor: pointer;
@@ -67,13 +66,13 @@ body {
 }
 
 .login-box button:hover {
-    background: #134B74;
+    background: rgb(252, 70, 100);
 }
 
 .login-box .inscription {
-    background: #154a75;
+    background: rgb(252, 10, 10);
 }
 
 .login-box .inscription:hover {
-    background: #134B74;
+    background: rgb(252, 70, 100);
 }

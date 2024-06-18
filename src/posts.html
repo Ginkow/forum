@@ -3,36 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <title>Posts</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="/static/posts.css">
 </head>
 <body>
-    <h1>Posts</h1>
-    <div id="posts">
-        {{range .}}
-        <div class="post">
-            <a href="/details/{{.ID}}">
-                <h2>{{.Title}}</h2>
-                <p>{{.Content}}</p>
-                {{if .Video}}
-                <video width="320" height="240" controls>
-                    <source src="/{{.Video}}" type="video/mp4">
-                    Votre navigateur ne supporte pas la balise vidéo.
-                </video>
-                {{end}}
-                {{if .Image}}
-                <div class="images">
-                    {{range .Image}}
-                    <img src="/{{.}}" alt="Post image" width="320">
-                    {{end}}
-                </div>
-                {{end}}
-                <p>Posted by {{.Username}}</p>
-                <br>
-                    <span class="Spacing">_______________________________________________________________________________________________________________________________________________________________________________</span>
-                <br>
-            </a>
-        </div>
-        {{end}}
+    <div class="input-bas"></div>
+    <div class="input">
+        <img src="/images/telecharge_19-removebg-preview(1).png">
+        <a href="http://localhost:6969/profil">
+        <button class="value">
+          Mon profil</a>
+          
+        </button>
+        <button class="value">
+          <a href="/posts">Posts</a>
+        </button>
+        <button class="value">
+            <a href="http://localhost:6969/newpost">Creer un post</a>
+        </button>
+        <form id="logout-form" action="/logout" method="post">
+                            
+            <button type="submit" class="btn">Déconnexion</button>
+        </form>
+      </div>      
     </div>
+    {{range .}}
+    <button class="hover">
+        <a href="/details/{{.ID}}">
+    <div class="card">
+        
+        <div class="body">
+          <p class="text">{{.Title}}</p>
+          {{range .Image}}
+        <img src="/{{.}}" alt="Post image" width="240">
+        {{end}}
+        <span class="username">De: {{.Username}}</span>
+      </div>
+      </div>
+      </a>
+    </button>
+       {{end}}
 </body>
 </html>

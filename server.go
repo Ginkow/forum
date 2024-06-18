@@ -24,14 +24,23 @@ type User struct {
 	DB       *sql.DB
 }
 
-type Post struct {
-	ID      int
-	Title   string
-	Content string
-	Video   string
-	Image	[]string
-	UserID  int
+type Comment struct {
+	ID       int
+	PostID   int
+	UserID   int
 	Username string
+	Content  string
+}
+
+type Post struct {
+	ID       int
+	Title    string
+	Content  string
+	Video    string
+	Image    []string
+	UserID   int
+	Username string
+	Comments []Comment
 }
 
 type MainPageData struct {
@@ -87,74 +96,74 @@ func renderTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
 type mainPageHandler struct{}
 
 func (h *mainPageHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-    if r.Method == http.MethodGet {
-        var data MainPageData
-        sessionCookie, err := r.Cookie("session_id")
-        if err == nil {
-            email, ok := sessions[sessionCookie.Value]
-            if ok {
-                data.IsLoggedIn = true
-                // Retrieve the profile picture of the user
-                var profilePicture string
-                err := db.QueryRow("SELECT profile_picture FROM utilisateurs WHERE email = ?", email).Scan(&profilePicture)
-                if err == nil {
-                    data.ProfilePicture = profilePicture
-                }
-            }
-        }
+	if r.Method == http.MethodGet {
+		var data MainPageData
+		sessionCookie, err := r.Cookie("session_id")
+		if err == nil {
+			email, ok := sessions[sessionCookie.Value]
+			if ok {
+				data.IsLoggedIn = true
+				// Retrieve the profile picture of the user
+				var profilePicture string
+				err := db.QueryRow("SELECT profile_picture FROM utilisateurs WHERE email = ?", email).Scan(&profilePicture)
+				if err == nil {
+					data.ProfilePicture = profilePicture
+				}
+			}
+		}
 
-        // Retrieve posts
-        rows, err := db.Query("SELECT p.id, p.title, p.content, p.video, u.username FROM posts p JOIN utilisateurs u ON p.user_id = u.id")
-        if err != nil {
-            http.Error(w, "Erreur lors de la récupération des posts", http.StatusInternalServerError)
-            log.Println("Erreur lors de la récupération des posts:", err)
-            return
-        }
-        defer rows.Close()
+		// Retrieve posts
+		rows, err := db.Query("SELECT p.id, p.title, p.content, p.video, u.username FROM posts p JOIN utilisateurs u ON p.user_id = u.id")
+		if err != nil {
+			http.Error(w, "Erreur lors de la récupération des posts", http.StatusInternalServerError)
+			log.Println("Erreur lors de la récupération des posts:", err)
+			return
+		}
+		defer rows.Close()
 
-        for rows.Next() {
-            var post Post
-            var videoPtr sql.NullString
-            err := rows.Scan(&post.ID, &post.Title, &post.Content, &videoPtr, &post.Username)
-            if err != nil {
-                http.Error(w, "Erreur lors de la lecture des posts", http.StatusInternalServerError)
-                log.Println("Erreur lors de la lecture des posts:", err)
-                return
-            }
-            if videoPtr.Valid {
-                post.Video = videoPtr.String
-            }
+		for rows.Next() {
+			var post Post
+			var videoPtr sql.NullString
+			err := rows.Scan(&post.ID, &post.Title, &post.Content, &videoPtr, &post.Username)
+			if err != nil {
+				http.Error(w, "Erreur lors de la lecture des posts", http.StatusInternalServerError)
+				log.Println("Erreur lors de la lecture des posts:", err)
+				return
+			}
+			if videoPtr.Valid {
+				post.Video = videoPtr.String
+			}
 
-            // Retrieve associated images
-            imageRows, err := db.Query("SELECT image FROM posts WHERE post_id = ?", post.ID)
-            if err != nil {
-                http.Error(w, "Erreur lors de la récupération des images", http.StatusInternalServerError)
-                log.Println("Erreur lors de la récupération des images:", err)
-                return
-            }
-            defer imageRows.Close()
+			// Retrieve associated images
+			imageRows, err := db.Query("SELECT image FROM posts WHERE post_id = ?", post.ID)
+			if err != nil {
+				http.Error(w, "Erreur lors de la récupération des images", http.StatusInternalServerError)
+				log.Println("Erreur lors de la récupération des images:", err)
+				return
+			}
+			defer imageRows.Close()
 
-            for imageRows.Next() {
-                var imagePath string
-                if err := imageRows.Scan(&imagePath); err != nil {
-                    http.Error(w, "Erreur lors de la lecture des images", http.StatusInternalServerError)
-                    log.Println("Erreur lors de la lecture des images:", err)
-                    return
-                }
-                post.Image = append(post.Image, imagePath)
-            }
+			for imageRows.Next() {
+				var imagePath string
+				if err := imageRows.Scan(&imagePath); err != nil {
+					http.Error(w, "Erreur lors de la lecture des images", http.StatusInternalServerError)
+					log.Println("Erreur lors de la lecture des images:", err)
+					return
+				}
+				post.Image = append(post.Image, imagePath)
+			}
 
-            data.Posts = append(data.Posts, post)
-        }
+			data.Posts = append(data.Posts, post)
+		}
 
-        renderTemplate(w, "./src/Main_page.html", data)
-        return
-    }
-    if r.Method == http.MethodPost {
-        http.Redirect(w, r, "/register", http.StatusSeeOther)
-        return
-    }
-    http.NotFound(w, r)
+		renderTemplate(w, "./src/Main_page.html", data)
+		return
+	}
+	if r.Method == http.MethodPost {
+		http.Redirect(w, r, "/register", http.StatusSeeOther)
+		return
+	}
+	http.NotFound(w, r)
 }
 
 type registerHandler struct{}
@@ -437,7 +446,6 @@ func (h *newPostHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-
 		// Redirect to the main page with the ID of the new post
 		http.Redirect(w, r, fmt.Sprintf("/?postID=%d", postID), http.StatusSeeOther)
 		return
@@ -500,16 +508,41 @@ func (h *postsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	http.NotFound(w, r)
 }
 
-
 type postDetailHandler struct{}
 
 func (h *postDetailHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	// Extract the post ID from the URL path
 	postID := r.URL.Path[len("/details/"):]
+
+	if r.Method == http.MethodPost {
+		// Handle new comment submission
+		sessionCookie, err := r.Cookie("session_id")
+		if err != nil {
+			http.Redirect(w, r, "/login", http.StatusSeeOther)
+			return
+		}
+		email, ok := sessions[sessionCookie.Value]
+		if !ok {
+			http.Redirect(w, r, "/login", http.StatusSeeOther)
+			return
+		}
+		var userID int
+		err = db.QueryRow("SELECT id FROM utilisateurs WHERE email = ?", email).Scan(&userID)
+		if err != nil {
+			http.Error(w, "Erreur lors de la vérification de l'utilisateur", http.StatusInternalServerError)
+			log.Println("Erreur lors de la vérification de l'utilisateur:", err)
+			return
+		}
+		commentContent := r.FormValue("comment")
+		_, err = db.Exec("INSERT INTO comments (post_id, user_id, content) VALUES (?, ?, ?)", postID, userID, commentContent)
+		if err != nil {
+			http.Error(w, "Erreur lors de l'ajout du commentaire", http.StatusInternalServerError)
+			log.Println("Erreur lors de l'ajout du commentaire:", err)
+			return
+		}
+	}
+
 	var post Post
 	var videoPtr sql.NullString
-
-	// Fetch the post details from the database
 	err := db.QueryRow("SELECT p.id, p.title, p.content, p.video, u.username FROM posts p JOIN utilisateurs u ON p.user_id = u.id WHERE p.id = ?", postID).Scan(&post.ID, &post.Title, &post.Content, &videoPtr, &post.Username)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -524,7 +557,6 @@ func (h *postDetailHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		post.Video = videoPtr.String
 	}
 
-	// Retrieve associated images
 	imageRows, err := db.Query("SELECT image FROM posts WHERE post_id = ?", post.ID)
 	if err != nil {
 		http.Error(w, "Erreur lors de la récupération des images", http.StatusInternalServerError)
@@ -543,10 +575,27 @@ func (h *postDetailHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		post.Image = append(post.Image, imagePath)
 	}
 
-	// Render the post detail template
+	// Fetch comments
+	commentRows, err := db.Query("SELECT c.id, c.post_id, c.user_id, u.username, c.content FROM comments c JOIN utilisateurs u ON c.user_id = u.id WHERE c.post_id = ?", post.ID)
+	if err != nil {
+		http.Error(w, "Erreur lors de la récupération des commentaires", http.StatusInternalServerError)
+		log.Println("Erreur lors de la récupération des commentaires:", err)
+		return
+	}
+	defer commentRows.Close()
+
+	for commentRows.Next() {
+		var comment Comment
+		if err := commentRows.Scan(&comment.ID, &comment.PostID, &comment.UserID, &comment.Username, &comment.Content); err != nil {
+			http.Error(w, "Erreur lors de la lecture des commentaires", http.StatusInternalServerError)
+			log.Println("Erreur lors de la lecture des commentaires:", err)
+			return
+		}
+		post.Comments = append(post.Comments, comment)
+	}
+
 	renderTemplate(w, "./src/post_detail.html", post)
 }
-
 
 type errorHandler struct{}
 

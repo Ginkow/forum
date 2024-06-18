@@ -9,89 +9,60 @@
 <body>
 
 <header>
-    <h1>EFsport</h1>
     <h2>
-        {{if .IsLoggedIn}}
-        <div class="dropdown">
-            <button class="bloc-top">
-                <a href="http://localhost:6969/profil">Mon profil</a>
-            </button>
-            <div class="bloc-links">
-                <ul>
-                    <li>
-                        <br><br>
-                        <a href="http://localhost:6969/newpost">Creer un post</a>
-                        <br><br>
-                    </li>
-                    <li>
-                        <a href="/posts">Post</a>
-                        <br><br>
-                    </li>
-                    <li>
-                        <form id="logout-form" action="/logout" method="post">
-                        
-                            <button type="submit" class="logout">Déconnexion</button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
-        </div>
-            <div class="container">
-                <!-- <img src="/images/{{.ProfilePicture}}" alt="Photo de profil" class="profile-picture" id="profile-picture">
-                /*Formulaire d'upload d'image (initiallement caché)*/
-                <form id="upload-form" style="display: none;" action="/uploadProfilePicture" method="post" enctype="multipart/form-data">
-                    <input type="file" name="profilePicture" id="profile-picture-input">
-                    <input type="submit" value="Upload" id="upload-button">
-                </form> -->
-            </div>
-        {{else}}
-            <div class="dropdown">
-                <button class="bloc-top">
-                    <a href="http://localhost:6969/login">Page de connexion</a>
-                    <br><br>
-                </button>
-                <div class="bloc-links">
-                    <ul>
-                        <li>
-                            <br><br><br>
-                            <a href="http://localhost:6969/login">Creer un post</a>
-                            <br><br>
-                        </li>
-                        <li>
-                            <a href="/posts">Post</a>
-                            <br><br>
-                        </li>
-                        <li>
-                            <a href="#">Lien 3</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        {{end}}
-    </h2>
-</header>
+      
+</header> 
 
 <section>
-    <p>Derniers sujets à la une</p>
+    <h1>Derniers sujets à la une</h1>
+    <p1>Sujet</p1><p2>Auteur</p2><p3>Catégorie</p3>
+
     {{range .Posts}}
     <div class="post">
-        <div class="TitlePost">{{.Title}}:</div>
-        <div class="UsernamePost">Posté par : {{.Username}}</div>   
-        {{if .Video}}
-        <div class="videoPost">
-        <video width="320" height="240" controls>
-            <source src="/{{.Video}}" type="video/mp4">
-            Votre navigateur ne supporte pas la balise vidéo.
-        </video>
-        {{end}}
-        {{range .Image}}
-        <img src="/{{.}}" alt="Image" width="320">
-        {{end}}
-        </div>
+        <div class="TitlePost">{{.Title}}</div>
+        <div class="UsernamePost">{{.Username}}</div>
+        <div class="CategoriePost">League of Legends</div>  
     </div>
     <hr>
     {{end}}
 </section>
+<div class="input-bas"></div>
+{{if .IsLoggedIn}}
+<div class="input">
+    <img src="/images/telecharge_19-removebg-preview(1).png">
+    <a href="http://localhost:6969/profil">
+    <button class="value">
+      Mon profil</a>
+      
+    </button>
+    <button class="value">
+      <a href="/posts">Posts</a>
+    </button>
+    <button class="value">
+        <a href="http://localhost:6969/newpost">Creer un post</a>
+    </button>
+    <form id="logout-form" action="/logout" method="post">
+                        
+        <button type="submit" class="btn">Déconnexion</button>
+    </form>
+  </div>
+  {{else}}
+  <div class="input">
+    <img src="/images/telecharge_19-removebg-preview(1).png">
+    <a href="http://localhost:6969/profil">
+    <button class="value">
+      Mon profil</a>
+      
+    </button>
+    <button class="value">
+      <a href="/posts">Posts</a>
+    </button>
+    <button class="value">
+        <a href="http://localhost:6969/newpost">Creer un post</a>
+    </button>
+    <a class="btn" href="http://localhost:6969/login">Connexion</a>
+  {{end}}
+
 
 <!-- JavaScript pour gérer le clic sur la photo de profil-->
 <script>

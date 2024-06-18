@@ -8,7 +8,6 @@
 </head>
 <body>
 <div class="Title">
-<h1>Créer un nouveau post</h1>
 </div>
 <div class="formulaire">
 <form action="/newpost" method="post" enctype="multipart/form-data">
@@ -33,6 +32,43 @@
     </div>
 </form>
 </div>
+
+<div class="input-bas"></div>
+{{if .IsLoggedIn}}
+<div class="input">
+    <img src="/images/telecharge_19-removebg-preview(1).png">
+    <a href="http://localhost:6969/profil">
+    <button class="value">
+      Mon profil</a>
+      
+    </button>
+    <button class="value">
+      <a href="/posts">Posts</a>
+    </button>
+    <button class="value">
+        <a href="http://localhost:6969/newpost">Creer un post</a>
+    </button>
+    <form id="logout-form" action="/logout" method="post">
+                        
+        <button type="submit" class="btn">Déconnexion</button>
+    </form>
+  </div>
+  {{else}}
+  <div class="input">
+    <img src="/images/telecharge_19-removebg-preview(1).png">
+    <a href="http://localhost:6969/profil">
+    <button class="value">
+      Mon profil</a>
+      
+    </button>
+    <button class="value">
+      <a href="/posts">Posts</a>
+    </button>
+    <button class="value">
+        <a href="http://localhost:6969/newpost">Creer un post</a>
+    </button>
+    <a class="btn" href="http://localhost:6969/login">Connexion</a>
+  {{end}}
 
 </body>
 </html>
