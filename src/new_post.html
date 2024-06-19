@@ -30,37 +30,11 @@
       <span class="text">Publier</span>
     </button>
 </form>
-  <!--
-<div class="Title">
-</div>
-<div class="formulaire">
-<form action="/newpost" method="post" enctype="multipart/form-data">
-    <div>
-        <br><label for="title">Titre:</label><br><br>
-        <input type="text" id="title" name="title" required>
-    </div>
-    <div>
-        <br><br><label for="content">Contenu:</label><br><br>
-        <textarea id="content" name="content" rows="16" cols="30"></textarea>
-    </div>
-    <div>
-        <br><label for="all">Images/Videos:</label><br><br>
-        <input class="fichier" type="file" id="all" name="all" accept="all/*">
-    </div>
-     <div>
-        <label for="video">Vidéo:</label>
-        <input type="file" id="video" name="video" accept="video/*">
-    </div> 
-    <div>
-        <br><br><button class="publier" type="submit">Publier</button>
-    </div>
-</form>
-</div>
--->
+
 <div class="input-bas"></div>
 {{if .IsLoggedIn}}
 <div class="input">
-    <img src="/images/telecharge_19-removebg-preview(1).png">
+    <a href="/"><img src="/images/telecharge_19-removebg-preview(1).png"></a>
     <a href="http://localhost:6969/profil">
     <button class="value">
       Mon profil</a>
@@ -79,7 +53,7 @@
   </div>
   {{else}}
   <div class="input">
-    <img src="/images/telecharge_19-removebg-preview(1).png">
+    <a href="/"><img src="/images/telecharge_19-removebg-preview(1).png"></a>
     <a href="http://localhost:6969/profil">
     <button class="value">
       Mon profil</a>
