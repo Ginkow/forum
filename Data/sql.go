@@ -28,7 +28,8 @@ func InitDB() (*sql.DB, error) {
         video   BLOB,
         image   BLOB,
         user_id INTEGER,
-        post_id INTEGER
+        post_id INTEGER,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
     CREATE TABLE IF NOT EXISTS comments (

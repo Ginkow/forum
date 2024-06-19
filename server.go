@@ -33,12 +33,12 @@ type Comment struct {
 }
 
 type Post struct {
-	ID       int
-	Title    string
-	Content  string
-	Video    string
-	Image    []string
-	UserID   int
+	ID      int
+	Title   string
+	Content string
+	Video   string
+	Image	[]string
+	UserID  int
 	Username string
 	Comments []Comment
 }
@@ -69,6 +69,7 @@ func main() {
 	http.Handle("/details/", &postDetailHandler{})
 	http.Handle("/erreur", &errorHandler{})
 	http.Handle("/logout", &logoutHandler{})
+	http.Handle("/profile", &profileHandler{})
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static/"))))
 	http.Handle("/src/", http.StripPrefix("/src/", http.FileServer(http.Dir("src/"))))
@@ -96,74 +97,74 @@ func renderTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
 type mainPageHandler struct{}
 
 func (h *mainPageHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodGet {
-		var data MainPageData
-		sessionCookie, err := r.Cookie("session_id")
-		if err == nil {
-			email, ok := sessions[sessionCookie.Value]
-			if ok {
-				data.IsLoggedIn = true
-				// Retrieve the profile picture of the user
-				var profilePicture string
-				err := db.QueryRow("SELECT profile_picture FROM utilisateurs WHERE email = ?", email).Scan(&profilePicture)
-				if err == nil {
-					data.ProfilePicture = profilePicture
-				}
-			}
-		}
+    if r.Method == http.MethodGet {
+        var data MainPageData
+        sessionCookie, err := r.Cookie("session_id")
+        if err == nil {
+            email, ok := sessions[sessionCookie.Value]
+            if ok {
+                data.IsLoggedIn = true
+                // Retrieve the profile picture of the user
+                var profilePicture string
+                err := db.QueryRow("SELECT profile_picture FROM utilisateurs WHERE email = ?", email).Scan(&profilePicture)
+                if err == nil {
+                    data.ProfilePicture = profilePicture
+                }
+            }
+        }
 
-		// Retrieve posts
-		rows, err := db.Query("SELECT p.id, p.title, p.content, p.video, u.username FROM posts p JOIN utilisateurs u ON p.user_id = u.id")
-		if err != nil {
-			http.Error(w, "Erreur lors de la récupération des posts", http.StatusInternalServerError)
-			log.Println("Erreur lors de la récupération des posts:", err)
-			return
-		}
-		defer rows.Close()
+        // Retrieve posts with limit 10 and order by creation date
+        rows, err := db.Query("SELECT p.id, p.title, p.content, p.video, u.username FROM posts p JOIN utilisateurs u ON p.user_id = u.id ORDER BY p.created_at DESC LIMIT 9")
+        if err != nil {
+            http.Error(w, "Erreur lors de la récupération des posts", http.StatusInternalServerError)
+            log.Println("Erreur lors de la récupération des posts:", err)
+            return
+        }
+        defer rows.Close()
 
-		for rows.Next() {
-			var post Post
-			var videoPtr sql.NullString
-			err := rows.Scan(&post.ID, &post.Title, &post.Content, &videoPtr, &post.Username)
-			if err != nil {
-				http.Error(w, "Erreur lors de la lecture des posts", http.StatusInternalServerError)
-				log.Println("Erreur lors de la lecture des posts:", err)
-				return
-			}
-			if videoPtr.Valid {
-				post.Video = videoPtr.String
-			}
+        for rows.Next() {
+            var post Post
+            var videoPtr sql.NullString
+            err := rows.Scan(&post.ID, &post.Title, &post.Content, &videoPtr, &post.Username)
+            if err != nil {
+                http.Error(w, "Erreur lors de la lecture des posts", http.StatusInternalServerError)
+                log.Println("Erreur lors de la lecture des posts:", err)
+                return
+            }
+            if videoPtr.Valid {
+                post.Video = videoPtr.String
+            }
 
-			// Retrieve associated images
-			imageRows, err := db.Query("SELECT image FROM posts WHERE post_id = ?", post.ID)
-			if err != nil {
-				http.Error(w, "Erreur lors de la récupération des images", http.StatusInternalServerError)
-				log.Println("Erreur lors de la récupération des images:", err)
-				return
-			}
-			defer imageRows.Close()
+            // Retrieve associated images
+            imageRows, err := db.Query("SELECT image FROM posts WHERE post_id = ?", post.ID)
+            if err != nil {
+                http.Error(w, "Erreur lors de la récupération des images", http.StatusInternalServerError)
+                log.Println("Erreur lors de la récupération des images:", err)
+                return
+            }
+            defer imageRows.Close()
 
-			for imageRows.Next() {
-				var imagePath string
-				if err := imageRows.Scan(&imagePath); err != nil {
-					http.Error(w, "Erreur lors de la lecture des images", http.StatusInternalServerError)
-					log.Println("Erreur lors de la lecture des images:", err)
-					return
-				}
-				post.Image = append(post.Image, imagePath)
-			}
+            for imageRows.Next() {
+                var imagePath string
+                if err := imageRows.Scan(&imagePath); err != nil {
+                    http.Error(w, "Erreur lors de la lecture des images", http.StatusInternalServerError)
+                    log.Println("Erreur lors de la lecture des images:", err)
+                    return
+                }
+                post.Image = append(post.Image, imagePath)
+            }
 
-			data.Posts = append(data.Posts, post)
-		}
+            data.Posts = append(data.Posts, post)
+        }
 
-		renderTemplate(w, "./src/Main_page.html", data)
-		return
-	}
-	if r.Method == http.MethodPost {
-		http.Redirect(w, r, "/register", http.StatusSeeOther)
-		return
-	}
-	http.NotFound(w, r)
+        renderTemplate(w, "./src/Main_page.html", data)
+        return
+    }
+    if r.Method == http.MethodPost {
+        http.Redirect(w, r, "/register", http.StatusSeeOther)
+        return
+    }
+    http.NotFound(w, r)
 }
 
 type registerHandler struct{}
@@ -438,18 +439,21 @@ func (h *newPostHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 		// Insert images into the database
 		for _, imagePath := range imagePaths {
-			_, err = db.Exec("INSERT INTO posts (post_id, image) VALUES (?, ?)", postID, imagePath)
+			_, err := db.Exec("INSERT INTO posts (title, content, image, post_id) VALUES (?, ?, ?, ?)", title, content, imagePath, postID)
 			if err != nil {
-				http.Error(w, "Erreur lors de l'insertion des images", http.StatusInternalServerError)
-				log.Println("Erreur lors de l'insertion des images:", err)
+				http.Error(w, "Erreur lors de la création du post", http.StatusInternalServerError)
+				log.Println("Erreur lors de l'insertion de l'image dans la base de données:", err)
 				return
 			}
 		}
 
-		http.Redirect(w, r, "/", http.StatusSeeOther)
-	}
-}
 
+		// Redirect to the main page with the ID of the new post
+		http.Redirect(w, r, fmt.Sprintf("/?postID=%d", postID), http.StatusSeeOther)
+		return
+	}
+	http.NotFound(w, r)
+}
 
 type postsHandler struct{}
 
@@ -505,6 +509,7 @@ func (h *postsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	http.NotFound(w, r)
 }
+
 
 type postDetailHandler struct{}
 
@@ -600,8 +605,35 @@ func (h *postDetailHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, "./src/post_detail.html", post)
 }
 
+
 type errorHandler struct{}
 
 func (h *errorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, "./src/erreur.html", nil)
+}
+
+type profileHandler struct{}
+
+func (h *profileHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+    // Check if user is logged in
+    sessionCookie, err := r.Cookie("session_id")
+    if err != nil {
+        http.Redirect(w, r, "/login", http.StatusSeeOther)
+        return
+    }
+    email, ok := sessions[sessionCookie.Value]
+    if !ok {
+        http.Redirect(w, r, "/login", http.StatusSeeOther)
+        return
+    }
+
+    var user User
+    err = db.QueryRow("SELECT id, email, username FROM utilisateurs WHERE email = ?", email).Scan(&user.ID, &user.Email, &user.Username)
+    if err != nil {
+        http.Error(w, "Erreur lors de la récupération des informations de l'utilisateur", http.StatusInternalServerError)
+        log.Println("Erreur lors de la récupération des informations de l'utilisateur:", err)
+        return
+    }
+
+    renderTemplate(w, "./src/profile.html", user)
 }

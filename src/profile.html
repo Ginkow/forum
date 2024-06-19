@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Posts</title>
+    <link rel="stylesheet" href="/static/profile.css">
+</head>
+<body>
+    <div class="input-bas"></div>
+    <div class="input">
+        <img src="/images/telecharge_19-removebg-preview(1).png">
+        <a href="http://localhost:6969/profile">
+        <button class="value">Mon profil</a></button>
+        <button class="value"><a href="/posts">Posts</a></button>
+        <button class="value"><a href="http://localhost:6969/newpost">Creer un post</a></button>
+        <form id="logout-form" action="/logout" method="post">
+            <button type="submit" class="btn">Déconnexion</button>
+        </form>
+    </div>
+    <div class="card">
+        <div class="Pfp"></div>
+        <div class="truc"></div>
+        <span class="username">De: {{.Username}}</span>
+    </div>
+</body>
+</html>
