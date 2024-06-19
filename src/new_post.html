@@ -7,6 +7,25 @@
     <link rel="stylesheet" href="/static/new_Post.css">
 </head>
 <body>
+  <form class="form">
+    
+    <div class="flex">
+        <label>
+          <h1>Titre</h1>
+            <input class="inputTitle" type="text" required="">
+        </label>
+
+    </div>  
+    <label>
+        <h2>Contenu</h2>
+        <textarea class="input01" rows="3" required=""></textarea>
+    </label>
+    
+    <button href="#" class="fancy">
+      <span class="text">Publier</span>
+    </button>
+</form>
+  <!--
 <div class="Title">
 </div>
 <div class="formulaire">
@@ -23,16 +42,16 @@
         <br><label for="all">Images/Videos:</label><br><br>
         <input class="fichier" type="file" id="all" name="all" accept="all/*">
     </div>
-    <!-- <div>
+     <div>
         <label for="video">Vidéo:</label>
         <input type="file" id="video" name="video" accept="video/*">
-    </div> -->
+    </div> 
     <div>
-        <br><br><button type="submit">Publier</button>
+        <br><br><button class="publier" type="submit">Publier</button>
     </div>
 </form>
 </div>
-
+-->
 <div class="input-bas"></div>
 {{if .IsLoggedIn}}
 <div class="input">

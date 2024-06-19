@@ -10,37 +10,32 @@
     <div class="input">
         <img src="/images/telecharge_19-removebg-preview(1).png">
         <a href="http://localhost:6969/profil">
-        <button class="value">
-          Mon profil</a>
-          
-        </button>
-        <button class="value">
-          <a href="/posts">Posts</a>
-        </button>
-        <button class="value">
-            <a href="http://localhost:6969/newpost">Creer un post</a>
-        </button>
+        <button class="value">Mon profil</a></button>
+        <button class="value"><a href="/posts">Posts</a></button>
+        <button class="value"><a href="http://localhost:6969/newpost">Creer un post</a></button>
         <form id="logout-form" action="/logout" method="post">
-                            
             <button type="submit" class="btn">Déconnexion</button>
         </form>
-      </div>      
     </div>
-    {{range .}}
-    <button class="hover">
-        <a href="/details/{{.ID}}">
-    <div class="card">
-        
-        <div class="body">
-          <p class="text">{{.Title}}</p>
-          {{range .Image}}
-        <img src="/{{.}}" alt="Post image" width="240">
+    <div class="posts-container">
+        {{range .}}
+        <button class="hover">
+            <div class="fond">
+                <a href="/details/{{.ID}}">
+                    <div class="card">
+                        <div class="body">
+                            <p class="text">{{.Title}}</p>
+                            {{range .Image}}
+                            <br>
+                            <img src="/{{.}}" alt="Post image" width="240">
+                            {{end}}
+                            <span class="username"><br>De: {{.Username}}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </button>
         {{end}}
-        <span class="username">De: {{.Username}}</span>
-      </div>
-      </div>
-      </a>
-    </button>
-       {{end}}
+    </div>
 </body>
 </html>

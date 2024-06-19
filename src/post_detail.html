@@ -6,13 +6,22 @@
     <link rel="stylesheet" href="/static/post_detail.css">
 </head>
 <body>
-    <a href="/posts">Back to Home</a>
+  <div class="input">
+      <img src="/images/telecharge_19-removebg-preview(1).png">
+      <a href="http://localhost:6969/profil">
+      <button class="value">Mon profil</a></button>
+      <button class="value"><a href="/posts">Posts</a></button>
+      <button class="value"><a href="http://localhost:6969/newpost">Creer un post</a></button>
+      <form id="logout-form" action="/logout" method="post">
+          <button type="submit" class="btn">Déconnexion</button>
+      </form>
+  </div>
     <div class="card">
    
         <div class="body">
           <p class="text">{{.Content}}</p>
           {{range .Image}}
-        <img src="/{{.}}" alt="Post image" width="240">
+        <img class="imagepost" src="/{{.}}" alt="Post image" width="240">
         {{end}}
         <span class="username">De: {{.Username}}</span>
       </div>
@@ -49,24 +58,6 @@
                12v2c0 1.103.897 2 2 2h5.612L8.49 19.367a2.004 2.004 0 0 0 .274 1.802c.376.52.982.831
                 1.624.831H12c.297 0 .578-.132.769-.36l4.7-5.64H20c1.103 0 2-.897 2-2V5c0-1.103-.897-2-2-2zm-8.469
                  17h-1.145l1.562-4.684A1 1 0 0 0 11 14H4v-1.819L6.693 5H16v9.638L11.531 20zM18 14V5h2l.001 9H18z"
-            ></path>
-          </svg>
-        </label>
-      
-        <label for="comment">
-          <input type="radio" name="evaluation" id="comment" />
-          <svg
-            class="icon comment"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M16 10H16.01M12 10H12.01M8 10H8.01M3
-               10C3 4.64706 5.11765 3 12 3C18.8824 3 21 4.64706
-                21 10C21 15.3529 18.8824 17 12 17C11.6592 17 11.3301 16.996 11.0124
-                 16.9876L7 21V16.4939C4.0328 15.6692 3 13.7383 3 10Z"
             ></path>
           </svg>
         </label>
@@ -115,28 +106,11 @@
             ></path>
           </svg>
         </label>
-        <label for="comment">
-          <input type="radio" name="evaluation" id="comment" />
-          <svg
-            class="icon comment"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M16 10H16.01M12 10H12.01M8 10H8.01M3
-               10C3 4.64706 5.11765 3 12 3C18.8824 3 21 4.64706
-                21 10C21 15.3529 18.8824 17 12 17C11.6592 17 11.3301 16.996 11.0124
-                 16.9876L7 21V16.4939C4.0328 15.6692 3 13.7383 3 10Z"
-            ></path>
-          </svg>
-        </label>
       </div>
       </div>
       {{end}}
     <form action="/details/{{.ID}}" method="post">
-        <textarea  class="input" name="comment" rows="4" cols="50" required></textarea><br>
+        <textarea  class="area" name="comment" rows="4" cols="50" required></textarea><br>
         <input type="submit" value="Repondre">
     </form>
 </body>

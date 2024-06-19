@@ -1,163 +1,179 @@
 body {
-    background: linear-gradient(to right,rgb(66, 137, 192),60%, purple);
-    font-family: Arial, Helvetica, sans-serif;
-    border: none;
+  background: linear-gradient(to right, rgb(66, 137, 192), 60%, purple);
+  font-family: Arial, Helvetica, sans-serif;
+  border: none;
 }
 
 a {
-    text-decoration: none;
-    color: black;
-    position: relative;
-    text-align: center;
+  text-decoration: none;
+  color: black;
+  position: relative;
+  text-align: center;
 }
 
 span {
-    font-size: 30px;
-    color: black;
+  font-size: 30px;
+  color: black;
 }
 
 .card {
-    background-color: #30344c;
-    padding: 1em;
-    z-index: 5;
-    box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
-    max-width: 300px;
-    transition: 200ms ease-in-out;
-    display: inline-block;
-  }
-  
-  .username {
-    color: #C6E1ED;
-    font-size: 0.85em;
-    font-weight: 600;
-    margin-right: auto;
-  }
-  
-  .body {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .body .text {
-    margin: 0 10px 0 0;
-    white-space: pre-line;
-    color: #c0c3d7;
-    font-weight: 400;
-    line-height: 1.5;
-    margin-bottom: 4px;
-  }
+  padding: 1em;
+  max-width: 300px;
+}
 
-  .body img {
-    position: relative;
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 250px;
-  }
+.username {
+  color: #C6E1ED;
+  font-size: 0.85em;
+  font-weight: 600;
+  margin-right: auto;
+}
 
-  .input {
-    position: absolute;
-    top: 0%;
-    left: 0%;
-    display: flex;
-    flex-direction: row;
-    width: auto;
-    background-color: #0f1c32;
-    width: 100%;
-    height: 7.5%;
-    justify-content: left;
-    align-items: center;
-  }
-  
+.body {
+  display: flex;
+  flex-direction: column;
+}
+
+.body .text {
+  margin: 0 10px 0 0;
+  white-space: pre-line;
+  color: #c0c3d7;
+  font-weight: 400;
+  line-height: 1.5;
+  margin-bottom: 4px;
+}
+
+.body img {
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 250px;
+}
+
+.input {
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  display: flex;
+  flex-direction: row;
+  background-color: #0f1c32;
+  width: 100%;
+  height: 7.5%;
+  justify-content: left;
+  align-items: center;
+}
+
 .input img {
-    width: 40px;
-    padding-left: 20px;
-    padding-right: 20px;
+  width: 40px;
+  padding-left: 20px;
+  padding-right: 20px;
 } 
 
-  .value {
-    background-color: transparent;
-    border: none;
-    padding-right: 20px;
-    color: white;
-    font-size: 16px;
+.value {
+  background-color: transparent;
+  border: none;
+  padding-right: 20px;
+  color: white;
+  font-size: 16px;
+  display: flex;
+  position: relative;
+  gap: 5px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin: 0 10px 0 10px;
+}
+
+.value a {
+  text-decoration: none;
+  color: white;
+}
+
+.input form button {
+  position: absolute;
+  right: 0%;
+  top: 3%;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.9rem 1.8rem;
+  font-size: 16px;
+  font-weight: 700;
+  color: white;
+  border: 3px solid rgb(252, 70, 100);
+  cursor: pointer;
+  position: absolute;
+  right: 0%;
+  background-color: transparent;
+  text-decoration: none;
+  overflow: hidden;
+  z-index: 1;
+  font-family: inherit;
+}
+
+.btn::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(252, 70, 100);
+  transform: translateX(-100%);
+  transition: all .3s;
+  z-index: -1;
+}
+
+.btn:hover::before {
+  transform: translateX(0);
+}
+
+.input-bas {
+  position: absolute;
+  bottom: 0%;
+  left: 0%;
+  display: flex;
+  flex-direction: row;
+  background-color: #0f1c32;
+  width: 100%;
+  height: 3.75%;
+  justify-content: left;
+  align-items: center;
+}
+
+button {
+  border: none;
+  background: none;
+}
+
+.hover {
+  position: relative;
+  margin-top: 13.7%;
+  justify-content: center;
+}
+
+.hover:hover {
+  transform: scale(1.1);
+}
+
+.fond {
+  background: #30344c;
+  height: 400px;
+  width: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin: 10px;
+  box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  padding: 0;
+}
+
+.posts-container {
     display: flex;
-    position: relative;
-    gap: 5px;
-    cursor: pointer;
-    border-radius: 4px;
-    margin: 0 10px 0 10px;
-  }
-
-  .value a {
-    text-decoration: none;
-    color: white;
-  }
-
-  .input form button {
-    position: absolute;
-    right: 0%;
-    top: 3%;
-  }
-
-  .btn {
-    display: inline-block;
-    padding: 0.9rem 1.8rem;
-    font-size: 16px;
-    font-weight: 700;
-    color: white;
-    border: 3px solid rgb(252, 70, 100);
-    cursor: pointer;
-    position: absolute;
-    right: 0%;
-    background-color: transparent;
-    text-decoration: none;
-    overflow: hidden;
-    z-index: 1;
-    font-family: inherit;
-   }
-   
-   .btn::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgb(252, 70, 100);
-    transform: translateX(-100%);
-    transition: all .3s;
-    z-index: -1;
-   }
-   
-   .btn:hover::before {
-    transform: translateX(0);
-   }
-
-   .input-bas {
-    position: absolute;
-    bottom: 0%;
-    left: 0%;
-    display: flex;
+    margin-top: -3%;
     flex-direction: row;
-    width: auto;
-    background-color: #0f1c32;
-    width: 100%;
-    height: 3.75%;
-    justify-content: left;
-    align-items: center;
-  }
-
-  button {
-    border: none;
-    background: none;
-  }
-
-  .hover {
-    position: relative;
-    padding-top: 13.5%;
-  }
-
-  .hover:hover {
-    transform: scale(1.1);
-  }
+    flex-wrap: nowrap; /* Empêche le passage à la ligne suivante */
+    overflow-x: auto; /* Ajoute une barre de défilement horizontale */
+    gap: 0; /* Suppression des espaces entre les éléments */
+}

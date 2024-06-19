@@ -1,37 +1,7 @@
 body {
-    background-image: url(/images/pixelcut-export.jpeg);
+    background: linear-gradient(to right,rgb(66, 137, 192),60%, purple);
     background-size: cover;
     font-family: Arial, Helvetica, sans-serif;
-}
-
-.Title {
-    position: relative;
-    text-align: center;
-    color: violet;
-}
-
-.formulaire {
-    text-align: center;
-    position: relative;
-}
-
-label {
-    font-size: 30px;;
-}
-
-textarea {
-    border-radius: 0.2em;
-}
-
-button {
-    background-color: rgb(103, 75, 224);
-    color:white;
-    border-color: rgb(103, 75, 224);
-    border-radius: 0.5em;
-    font-size: 15px;
-    padding: 10px 30px;
-    position: absolute;
-    left: 46.5%;
 }
 
 .input {
@@ -124,4 +94,105 @@ button {
     height: 3.75%;
     justify-content: left;
     align-items: center;
+  }
+
+  .form {
+    margin-top: 10.5%;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 500px;
+    background-color: #30344c;
+    padding: 20px;
+    border-radius: 10px;
+    position: relative;
+    height: 400px;
+  }
+  
+  .message {
+    color: #355891;
+    font-size: 14px;
+  }
+  
+  .flex {
+    display: flex;
+    width: 100%;
+    gap: 6px;
+  }
+  
+  .form label {
+    position: relative;
+  }
+  
+  .form label .inputTitle {
+    width: 265%;
+    padding: 10px 10px 20px 10px;
+    outline: 0;
+    border: 1px solid #355891;
+    border-radius: 5px;
+    padding-bottom: 20px;
+  }
+  
+  .form label .inputTitle + span {
+    position: absolute;
+    left: 10px;
+    top: 15px;
+    color: #355891;
+    font-size: 0.9em;
+    cursor: text;
+    transition: 0.3s ease;
+  }
+  
+  .form label h1 {
+    
+    font-size: 16px;
+    color: #DEDFDF;
+  }
+
+  .input01 {
+    width: 94.4%;
+    position: relative;
+    padding: 10px 10px 20px 10px;
+    outline: 0;
+    border: 1px solid #355891;
+    border-radius: 5px;
+  }
+  
+  .fancy {
+    background-color: rgb(252, 10, 10);
+    border: none;
+    border-radius: 5px;
+    box-sizing: border-box;
+    cursor: pointer;
+    display: inline-block;
+    font-weight: 390;
+    letter-spacing: 2px;
+    outline: none;
+    padding: 8px 30px;
+    position: absolute;
+    top: 85%;
+    width: 93%;
+    height: 10%;
+    text-align: center;
+    text-decoration: none;
+    text-transform: none;
+    transition: all 0.3s ease-in-out;
+    user-select: none;
+    font-size: 13px;
+  }
+  
+  .fancy .text {
+    font-size: 16px;
+    line-height: 1.33333em;
+    display: block;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+    text-decoration: none;
+    color: white;
+  }
+  
+  .fancy:hover {
+  background-color: rgb(252, 70, 100);
   }
