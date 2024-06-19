@@ -16,6 +16,7 @@
           <button type="submit" class="btn">Déconnexion</button>
       </form>
   </div>
+    <h1>{{.Title}}</h1>
     <div class="card">
    
         <div class="body">
@@ -35,14 +36,15 @@
         {{end}}
         <br><br>
         <br>
+        <a href="/profil">
         <span class="username">De: {{.Username}}</span>
+        </a>
       </div>
     <div class="container">
         <label for="like">
           <input type="radio" name="evaluation" id="like" checked="" />
           <svg
             class="icon like"
-            xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
             viewBox="0 0 24 24"
@@ -60,7 +62,6 @@
           <input type="radio" name="evaluation" id="dislike" />
           <svg
             class="icon dislike"
-            xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
             viewBox="0 0 24 24"
@@ -76,18 +77,19 @@
       </div>
       </div>
       {{range .Comments}}
-      <div class="card">
+      <div class="card2">
    
         <div class="body">
           <p class="text">{{.Content}}</p>
+        <a href="/profil">
         <span class="username">De: {{.Username}}</span>
+        </a>
         </div>
     <div class="container">
         <label for="like">
           <input type="radio" name="evaluation" id="like" checked="" />
           <svg
             class="icon like"
-            xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
             viewBox="0 0 24 24"
@@ -105,7 +107,6 @@
           <input type="radio" name="evaluation" id="dislike" />
           <svg
             class="icon dislike"
-            xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
             viewBox="0 0 24 24"

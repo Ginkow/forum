@@ -90,6 +90,13 @@ body {
  padding-bottom: 20px;
 }
 
+h1 {
+  font-family: Arial, Helvetica, sans-serif;
+  margin-top: 7.5%;
+  font-size: 200%;
+  color: white;
+}
+
 .container {
     --col-gray: #30344c;
     --col-white: #fff;
@@ -169,7 +176,27 @@ body {
     z-index: 5;
     box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
-    max-width: 300px;
+    max-width: 500px;
+    max-height: 300px;
+    transition: 200ms ease-in-out;
+  }
+  
+  .card img {
+    max-width: 450px;
+    max-height: 250px;
+  }
+
+  .card2 {
+    margin-top: 3%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #30344c;
+    padding: 1em;
+    z-index: 5;
+    box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    max-width: 500px;
+    max-height: 300px;
     transition: 200ms ease-in-out;
   }
   
@@ -221,8 +248,9 @@ body {
   }
   
   .area {
+    margin-top: 5%;
     padding: 10px;
-    width: 120px;
+    width: 350px;
     border: none;
     outline: none;
     border-radius: 5px;
@@ -235,11 +263,29 @@ body {
   .area:focus {
     outline: 1px solid blue;
     box-shadow: none;
-    width: 230px;
+    width: 500px;
   }
   
   .area::placeholder {
     color: blue;
   }
   
+  form input {
+    width: 10%;
+    padding: 10px;
+    margin-top: 2%;   
+    border: none;
+    border-radius: 5px;
+    background: rgb(252, 10, 10);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-bottom: 10px;
+  }
+
+  form input:hover {
+    background: rgb(252, 70, 100);
+  }
+
   
