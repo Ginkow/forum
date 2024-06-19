@@ -69,6 +69,7 @@ func main() {
 	http.Handle("/details/", &postDetailHandler{})
 	http.Handle("/erreur", &errorHandler{})
 	http.Handle("/logout", &logoutHandler{})
+	http.Handle("/profil", &profilHandler{})
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static/"))))
 	http.Handle("/src/", http.StripPrefix("/src/", http.FileServer(http.Dir("src/"))))
@@ -438,18 +439,20 @@ func (h *newPostHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 		// Insert images into the database
 		for _, imagePath := range imagePaths {
-			_, err = db.Exec("INSERT INTO posts (post_id, image) VALUES (?, ?)", postID, imagePath)
+			_, err := db.Exec("INSERT INTO posts (title, content, image, post_id) VALUES (?, ?, ?, ?)", title, content, imagePath, postID)
 			if err != nil {
-				http.Error(w, "Erreur lors de l'insertion des images", http.StatusInternalServerError)
-				log.Println("Erreur lors de l'insertion des images:", err)
+				http.Error(w, "Erreur lors de la création du post", http.StatusInternalServerError)
+				log.Println("Erreur lors de l'insertion de l'image dans la base de données:", err)
 				return
 			}
 		}
 
-		http.Redirect(w, r, "/", http.StatusSeeOther)
+		// Redirect to the main page with the ID of the new post
+		http.Redirect(w, r, fmt.Sprintf("/?postID=%d", postID), http.StatusSeeOther)
+		return
 	}
+	http.NotFound(w, r)
 }
-
 
 type postsHandler struct{}
 
@@ -604,4 +607,30 @@ type errorHandler struct{}
 
 func (h *errorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, "./src/erreur.html", nil)
+}
+
+type profilHandler struct{}
+
+func (h *profilHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	// Check if user is logged in
+	sessionCookie, err := r.Cookie("session_id")
+	if err != nil {
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
+	}
+	email, ok := sessions[sessionCookie.Value]
+	if !ok {
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
+	}
+
+	var user User
+	err = db.QueryRow("SELECT id, email, username FROM utilisateurs WHERE email = ?", email).Scan(&user.ID, &user.Email, &user.Username)
+	if err != nil {
+		http.Error(w, "Erreur lors de la récupération des informations de l'utilisateur", http.StatusInternalServerError)
+		log.Println("Erreur lors de la récupération des informations de l'utilisateur:", err)
+		return
+	}
+
+	renderTemplate(w, "./src/profil.html", user)
 }

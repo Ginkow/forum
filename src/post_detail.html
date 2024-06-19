@@ -19,10 +19,21 @@
     <div class="card">
    
         <div class="body">
-          <p class="text">{{.Content}}</p>
-          {{range .Image}}
-        <img class="imagepost" src="/{{.}}" alt="Post image" width="240">
+        <p class="text">{{.Content}}</p>
+        {{if .Video}}
+        <video width="300" height="220" controls>
+        <source src="/{{.Video}}" type="video/mp4">
+           Votre navigateur ne supporte pas la balise vidéo.
+        </video>
         {{end}}
+        {{if .Image}}
+        <div class="images">
+          {{range .Image}}
+            <img src="/{{.}}" alt="Post image" width="320">
+          {{end}}
+        </div>
+        {{end}}
+        <br>
         <span class="username">De: {{.Username}}</span>
       </div>
     <div class="container">
