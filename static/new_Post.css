@@ -145,10 +145,19 @@ body {
     transition: 0.3s ease;
   }
   
+  .form label {
+  color: #DEDFDF;
+  }
+
   .form label h1 {
     
     font-size: 16px;
     color: #DEDFDF;
+  }
+
+  .form label h2 {
+    font-size: 16px;
+    color: #DEDFDF
   }
 
   .input01 {
@@ -195,4 +204,9 @@ body {
   
   .fancy:hover {
   background-color: rgb(252, 70, 100);
+  }
+
+  input[type=file] {
+    color: #DEDFDF;
+    background: none;
   }

@@ -7,21 +7,26 @@
     <link rel="stylesheet" href="/static/new_Post.css">
 </head>
 <body>
-  <form class="form">
+  <form action="/newpost" method="post" enctype="multipart/form-data" class="form">
     
     <div class="flex">
         <label>
           <h1>Titre</h1>
-            <input class="inputTitle" type="text" required="">
+            <input class="inputTitle" type="text" id="title" name="title" required>
         </label>
 
     </div>  
     <label>
         <h2>Contenu</h2>
-        <textarea class="input01" rows="3" required=""></textarea>
+        <textarea class="input01" id="content" name="content" rows="3" required></textarea>
     </label>
     
-    <button href="#" class="fancy">
+    <div>
+      <br><label for="all">Images/Videos:</label><br><br>
+      <input class="fichier" type="file" id="all" name="all" accept="all/*">
+  </div>
+
+    <button class="fancy" type="submit" href="#">
       <span class="text">Publier</span>
     </button>
 </form>
