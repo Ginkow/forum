@@ -107,11 +107,27 @@ body {
   }
 
   .card .Pfp {
-    background-image: url(/images/20228481.webp);
+    background-image: url(/images/GC64WCgWAAAR8Au.png);
     background-size: cover;
     width: 150px;
     height: 150px;
     position: relative;
-    top: 10%;
+    top: 20%;
     left: 10%;
+  }
+
+  .card .username {
+    color: white;
+    position: relative;
+    top: -15%;
+    left: 44.5%;
+    font-size: 30px;
+  }
+
+  .card .Email {
+    color: white;
+    position: relative;
+    top: 20%;
+    left: 20%;
+    font-size: 30px;
   }

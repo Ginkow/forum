@@ -69,7 +69,7 @@ func main() {
 	http.Handle("/details/", &postDetailHandler{})
 	http.Handle("/erreur", &errorHandler{})
 	http.Handle("/logout", &logoutHandler{})
-	http.Handle("/profile", &profileHandler{})
+	http.Handle("/profil", &profilHandler{})
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static/"))))
 	http.Handle("/src/", http.StripPrefix("/src/", http.FileServer(http.Dir("src/"))))
@@ -612,9 +612,9 @@ func (h *errorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, "./src/erreur.html", nil)
 }
 
-type profileHandler struct{}
+type profilHandler struct{}
 
-func (h *profileHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *profilHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
     // Check if user is logged in
     sessionCookie, err := r.Cookie("session_id")
     if err != nil {
@@ -635,5 +635,5 @@ func (h *profileHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    renderTemplate(w, "./src/profile.html", user)
+    renderTemplate(w, "./src/profil.html", user)
 }

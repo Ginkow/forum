@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Posts</title>
-    <link rel="stylesheet" href="/static/profile.css">
+    <link rel="stylesheet" href="/static/profil.css">
 </head>
 <body>
     <div class="input-bas"></div>
     <div class="input">
         <img src="/images/telecharge_19-removebg-preview(1).png">
-        <a href="http://localhost:6969/profile">
+        <a href="http://localhost:6969/profil">
         <button class="value">Mon profil</a></button>
         <button class="value"><a href="/posts">Posts</a></button>
         <button class="value"><a href="http://localhost:6969/newpost">Creer un post</a></button>
@@ -20,7 +20,8 @@
     <div class="card">
         <div class="Pfp"></div>
         <div class="truc"></div>
-        <span class="username">De: {{.Username}}</span>
+        <span class="username">{{.Username}}</span>
+        <span class="Email">{{.Email}}</span>
     </div>
 </body>
 </html>
