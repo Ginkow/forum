@@ -19,9 +19,9 @@
 
     {{range .Posts}}
     <div class="post">
-        <div class="TitlePost">{{.Title}}</div>
+      <a href="/details/{{.ID}}" class="TitlePost">{{.Title}}</a>
         <div class="UsernamePost">{{.Username}}</div>
-        <div class="CategoriePost">League of Legends</div>  
+        <div class="CategoriePost"></div>  
     </div>
     <hr>
     {{end}}

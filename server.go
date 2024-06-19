@@ -21,6 +21,7 @@ type User struct {
 	Email    string
 	Username string
 	Password string
+	Profile  string
 	DB       *sql.DB
 }
 
@@ -70,6 +71,7 @@ func main() {
 	http.Handle("/erreur", &errorHandler{})
 	http.Handle("/logout", &logoutHandler{})
 	http.Handle("/profil", &profilHandler{})
+	http.Handle("/profilOther", &profilOtherHandler{})
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static/"))))
 	http.Handle("/src/", http.StripPrefix("/src/", http.FileServer(http.Dir("src/"))))
@@ -113,7 +115,7 @@ func (h *mainPageHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		// Retrieve posts with limit 10 and order by creation date
+		// Retrieve posts with limit 7 and order by creation date
 		rows, err := db.Query("SELECT p.id, p.title, p.content, p.video, u.username FROM posts p JOIN utilisateurs u ON p.user_id = u.id ORDER BY p.created_at DESC LIMIT 7")
 		if err != nil {
 			http.Error(w, "Erreur lors de la récupération des posts", http.StatusInternalServerError)
@@ -512,7 +514,12 @@ func (h *postsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 type postDetailHandler struct{}
 
 func (h *postDetailHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	// Extract postID from URL path
 	postID := r.URL.Path[len("/details/"):]
+	if postID == "" {
+		http.Error(w, "ID du post manquant dans l'URL", http.StatusBadRequest)
+		return
+	}
 
 	if r.Method == http.MethodPost {
 		// Handle new comment submission
@@ -549,10 +556,10 @@ func (h *postDetailHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// Fetch post details and comments for GET request
 	var post Post
 	var videoPtr sql.NullString
-	err := db.QueryRow("SELECT p.id, p.title, p.content, p.video, u.username FROM posts p JOIN utilisateurs u ON p.user_id = u.id WHERE p.id = ?", postID).Scan(&post.ID, &post.Title, &post.Content, &videoPtr, &post.Username)
+	err := db.QueryRow("SELECT p.id, p.title, p.content, p.video, p.user_id, u.username FROM posts p JOIN utilisateurs u ON p.user_id = u.id WHERE p.id = ?", postID).Scan(&post.ID, &post.Title, &post.Content, &videoPtr, &post.UserID, &post.Username)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			http.Error(w, "Post not found", http.StatusNotFound)
+			http.Error(w, "Post non trouvé", http.StatusNotFound)
 			return
 		}
 		http.Error(w, "Erreur lors de la récupération du post", http.StatusInternalServerError)
@@ -563,7 +570,8 @@ func (h *postDetailHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		post.Video = videoPtr.String
 	}
 
-	imageRows, err := db.Query("SELECT image FROM posts WHERE post_id = ?", post.ID)
+	// Fetch images associated with the post
+	imageRows, err := db.Query("SELECT image FROM posts WHERE post_id = ?", postID)
 	if err != nil {
 		http.Error(w, "Erreur lors de la récupération des images", http.StatusInternalServerError)
 		log.Println("Erreur lors de la récupération des images:", err)
@@ -581,8 +589,8 @@ func (h *postDetailHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		post.Image = append(post.Image, imagePath)
 	}
 
-	// Fetch comments
-	commentRows, err := db.Query("SELECT c.id, c.post_id, c.user_id, u.username, c.content FROM comments c JOIN utilisateurs u ON c.user_id = u.id WHERE c.post_id = ?", post.ID)
+	// Fetch comments associated with the post
+	commentRows, err := db.Query("SELECT c.id, c.user_id, u.username, c.content FROM comments c JOIN utilisateurs u ON c.user_id = u.id WHERE c.post_id = ?", postID)
 	if err != nil {
 		http.Error(w, "Erreur lors de la récupération des commentaires", http.StatusInternalServerError)
 		log.Println("Erreur lors de la récupération des commentaires:", err)
@@ -592,7 +600,7 @@ func (h *postDetailHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	for commentRows.Next() {
 		var comment Comment
-		if err := commentRows.Scan(&comment.ID, &comment.PostID, &comment.UserID, &comment.Username, &comment.Content); err != nil {
+		if err := commentRows.Scan(&comment.ID, &comment.UserID, &comment.Username, &comment.Content); err != nil {
 			http.Error(w, "Erreur lors de la lecture des commentaires", http.StatusInternalServerError)
 			log.Println("Erreur lors de la lecture des commentaires:", err)
 			return
@@ -602,6 +610,7 @@ func (h *postDetailHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	renderTemplate(w, "./src/post_detail.html", post)
 }
+
 
 type errorHandler struct{}
 
@@ -633,4 +642,28 @@ func (h *profilHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	renderTemplate(w, "./src/profil.html", user)
+}
+
+type profilOtherHandler struct{}
+
+func (h *profilOtherHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+    username := r.URL.Query().Get("username")
+    if username == "" {
+        http.Error(w, "Nom d'utilisateur manquant", http.StatusBadRequest)
+        return
+    }
+
+    var user User
+    err := db.QueryRow("SELECT id, email, username FROM utilisateurs WHERE username = ?", username).Scan(&user.ID, &user.Email, &user.Username)
+    if err != nil {
+        if err == sql.ErrNoRows {
+            http.Error(w, "Utilisateur non trouvé", http.StatusNotFound)
+            return
+        }
+        http.Error(w, "Erreur lors de la récupération de l'utilisateur", http.StatusInternalServerError)
+        log.Println("Erreur lors de la récupération de l'utilisateur:", err)
+        return
+    }
+
+    renderTemplate(w, "./src/profilOther.html", user)
 }

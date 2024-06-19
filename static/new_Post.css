@@ -127,11 +127,10 @@ body {
   }
   
   .form label .inputTitle {
-    width: 223%;
+    width: 245%;
     height: 50%;
-    padding: 0px 10px 20px 10px;
     outline: 0;
-    font-size: 16px;
+    font-size: 100%;
     border: 1px solid #355891;
     border-radius: 5px;
     padding-bottom: 0px;
@@ -163,9 +162,8 @@ body {
   }
 
   .input01 {
-    width: 94.4%;
+    width: 97.5%;
     position: relative;
-    padding: 10px 10px 20px 10px;
     outline: 0;
     border: 1px solid #355891;
     border-radius: 5px;

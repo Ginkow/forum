@@ -22,7 +22,7 @@
         <div class="body">
         <p class="text">{{.Content}}</p>
         {{if .Video}}
-        <video width="300" height="220" controls>
+        <video width="200" height="113" controls>
         <source src="/{{.Video}}" type="video/mp4">
            Votre navigateur ne supporte pas la balise vidéo.
         </video>
@@ -36,9 +36,9 @@
         {{end}}
         <br><br>
         <br>
-        <a href="/profil">
-        <span class="username">De: {{.Username}}</span>
-        </a>
+        <a href="/profilOther?username={{.Username}}">
+          <span class="username">De: {{.Username}}</span>
+      </a>
       </div>
     <div class="container">
         <label for="like">
@@ -81,8 +81,8 @@
    
         <div class="body">
           <p class="text">{{.Content}}</p>
-        <a href="/profil">
-        <span class="username">De: {{.Username}}</span>
+          <a href="/profilOther?username={{.Username}}">
+            <span class="username">De: {{.Username}}</span>
         </a>
         </div>
     <div class="container">
